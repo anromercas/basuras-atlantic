@@ -12,8 +12,6 @@ app.use(bodyParser.json());
 // configuración global de rutas
 app.use(require('./routes/index'));
 
-const port = process.env.PORT || 3000;
-
 
 mongoose.connect('mongodb://localhost:27017/basuras', { useNewUrlParser: true, useCreateIndex: true }, (err, res) => {
     if (err) throw err;
@@ -21,6 +19,6 @@ mongoose.connect('mongodb://localhost:27017/basuras', { useNewUrlParser: true, u
     console.log('base de datos ONLINE');
 });
 
-app.listen(port, () => {
-    console.log(`Escuchando en el puerto: ${port}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Escuchando en el puerto: ${process.env.PORT}`);
 });
