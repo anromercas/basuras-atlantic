@@ -40,8 +40,8 @@ app.get('/usuario', verificaToken, (req, res) => {
         });
 });
 
-// Crear usuario
-app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
+// Crear usuario [verificaToken, verificaAdmin_Role],
+app.post('/usuario', (req, res) => {
     let body = req.body;
     console.log(req.body);
     let usuario = new Usuario({
