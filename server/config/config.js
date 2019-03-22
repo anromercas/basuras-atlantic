@@ -18,7 +18,7 @@ let urlDB;
 if (process.env.NODE_ENV === 'dev') {
     urlDB = 'mongodb://localhost:27017/basuras';
 } else {
-    urlDB = 'mongodb+srv://anromercas:2tLTry6sLLMBmu6@cluster0-ugsm2.mongodb.net/basuras?retryWrites=true';
+    urlDB = process.env.MONGO_URI;
 }
 
 process.env.URLDB = urlDB;
