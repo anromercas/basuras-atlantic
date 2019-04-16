@@ -31,10 +31,7 @@ let usuarioSchema = new Schema({
         default: 'USER_ROLE',
         enum: rolesValidos
     },
-    estado: {
-        type: Boolean,
-        default: true
-    }
+
 });
 
 usuarioSchema.methods.toJSON = function() {

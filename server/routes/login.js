@@ -5,6 +5,27 @@ const Usuario = require('../models/usuario');
 const app = express();
 
 
+let { verificaToken } = require('../middlewares/autenticacion');
+
+// ===========================================
+// Renovación de token
+// ===========================================
+app.get('/login/renuevatoken', verificaToken, (req, res) => {
+
+    var token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 }) // 4 horas
+
+    res.status(200).json({
+        ok: true,
+        token: token
+    });
+
+});
+
+
+
+// ===========================================
+// Login de usuario
+// ===========================================
 app.post('/login', (req, res) => {
 
     let body = req.body;
@@ -37,7 +58,8 @@ app.post('/login', (req, res) => {
 
         let token = jwt.sign({
             usuario: usuarioDB
-        }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN }); // expira en 1 hora
+        }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN }); // caducidad en middleware autenticacion
+
 
         res.json({
             ok: true,

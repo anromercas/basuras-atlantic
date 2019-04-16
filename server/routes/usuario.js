@@ -8,7 +8,9 @@ const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticac
 const app = express();
 
 
-// obtener usuarios
+// =================================
+// Mostrar todos los usuarios
+// =================================
 app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
@@ -40,10 +42,11 @@ app.get('/usuario', verificaToken, (req, res) => {
         });
 });
 
-// Crear usuario 
+// =================================
+// Crear usuario
+// =================================
 app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
     let body = req.body;
-    console.log(req.body);
     let usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
@@ -68,7 +71,9 @@ app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
     });
 });
 
-// modificar usuario
+// =================================
+// Modificar usuario
+// =================================
 app.put('/usuario/:id', verificaToken, (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'estado']);
@@ -98,7 +103,9 @@ app.put('/usuario/:id', verificaToken, (req, res) => {
     });
 });
 
-// borrar usuario
+// =================================
+// Borrar usuario
+// =================================
 app.delete('/usuario/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
