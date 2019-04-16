@@ -7,13 +7,14 @@ const Usuario = require('../models/usuario');
 
 const fs = require('fs');
 const path = require('path');
+const { verificaToken } = require('../middlewares/autenticacion');
 
 app.use(fileUpload({ useTempFiles: true }));
 
 // =================================
 // Sube la imagen y la vincula a su documento dependiendo del tipo
 // =================================
-app.put('/upload/:tipo/:id', function(req, res) {
+app.put('/upload/:tipo/:id', verificaToken, function(req, res) {
 
     let tipo = req.params.tipo;
     let id = req.params.id;

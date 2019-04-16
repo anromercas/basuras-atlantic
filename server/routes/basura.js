@@ -79,7 +79,7 @@ app.post('/basura', verificaToken, (req, res) => {
         calificacion: body.calificacion,
         estado: body.estado,
         zona: body.zona,
-        llenado: body.llenado,
+        residuo: body.residuo,
         observaciones: body.observaciones,
         fecha: body.fecha,
         img: body.img,

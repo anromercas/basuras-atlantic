@@ -29,8 +29,8 @@ let basuraSchema = new Schema({
         type: String,
         required: [true, 'La zona es necesaria']
     },
-    llenado: { // este campo hay que cambiarlo por un array de strings en el que se va a almacenar los objetos que se encuentran en el contenedor y no deberían estar.
-        type: Number,
+    residuo: {
+        type: String,
         //  required: [true, 'El llenado es necesario']
     },
     observaciones: {
