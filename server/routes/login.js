@@ -10,9 +10,9 @@ let { verificaToken } = require('../middlewares/autenticacion');
 // ===========================================
 // Renovación de token
 // ===========================================
-app.get('/login/renuevatoken', verificaToken, (req, res) => {
+app.get('/login/renuevatoken', (req, res) => {
 
-    var token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 }) // 4 horas
+    var token = jwt.sign({ usuario: req.usuario }, process.env.SEED, { expiresIn: 14400 }) // 4 horas
 
     res.status(200).json({
         ok: true,

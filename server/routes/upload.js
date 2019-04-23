@@ -108,7 +108,7 @@ function imagenBasura(id, res, nombreArchivo) {
             });
         }
 
-        borraArchivo(basuraDB.img, 'basuras');
+        //    borraArchivo(basuraDB.img, 'basuras');
 
         basuraDB.img = nombreArchivo;
 

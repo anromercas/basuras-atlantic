@@ -13,7 +13,7 @@ let Basura = require('../models/basura');
 app.get('/basura', verificaToken, (req, res) => {
 
     Basura.find({})
-        .sort('fecha')
+        .sort('numeroContenedor')
         .exec((err, basuras) => {
             if (err) {
                 return res.status(400).json({
