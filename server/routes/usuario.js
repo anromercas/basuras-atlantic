@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
-const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
+const { verificaToken /* , verificaAdmin_Role */ } = require('../middlewares/autenticacion');
 
 const app = express();
 
@@ -45,7 +45,7 @@ app.get('/usuario', verificaToken, (req, res) => {
 // =================================
 // Crear usuario
 // =================================
-app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
+app.post('/usuario', [verificaToken /* , verificaAdmin_Role */ ], (req, res) => {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
