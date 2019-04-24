@@ -19,11 +19,12 @@ let basuraSchema = new Schema({
     },
     calificacion: {
         type: Number,
+        required: false,
         //  required: [true, 'La calificación es necesaria']
     },
     estado: {
         type: String,
-        required: false
+        required: false,
     },
     zona: {
         type: String,
@@ -31,6 +32,7 @@ let basuraSchema = new Schema({
     },
     residuo: {
         type: String,
+        required: false,
         //  required: [true, 'El llenado es necesario']
     },
     observaciones: {
@@ -39,10 +41,12 @@ let basuraSchema = new Schema({
     },
     fecha: {
         type: String,
+        required: false,
         //  required: [true, 'La fecha es necesaria']
     },
     img: {
         type: String,
+        required: false,
         //   required: [true, 'La imagen es necesaria']
     },
     imgContenedor: {

@@ -84,8 +84,7 @@ app.post('/basura', verificaToken, (req, res) => {
         fecha: body.fecha,
         img: body.img,
         imgContenedor: body.imgContenedor,
-        imgDetalle: body.imgDetalle,
-        //  usuario: req.usuario._id
+        imgDetalle: body.imgDetalle
     });
 
     basura.save((err, basuraDB) => {
@@ -131,7 +130,6 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         // codigoContenedor: body.codigoContenedor,
         numeroContenedor: body.numeroContenedor,
         calificacion: body.calificacion,
-        ultimo: true,
         zona: body.zona,
         llenado: body.llenado,
         observaciones: body.observaciones,
