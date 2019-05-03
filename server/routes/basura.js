@@ -134,9 +134,9 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         llenado: body.llenado,
         observaciones: body.observaciones,
         fecha: body.fecha,
-        img: body.img,
-        imgContenedor: body.imgContenedor,
-        imgDetalle: body.imgDetalle
+        //  img: body.img,
+        //  imgContenedor: body.imgContenedor,
+        //  imgDetalle: body.imgDetalle
     };
 
     Basura.findByIdAndUpdate(id, basura, options, (err, basuraDB) => {
