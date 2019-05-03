@@ -74,13 +74,14 @@ app.post('/historico', verificaToken, (req, res) => {
     let body = req.body;
 
     let historico = new Historico({
+        idBasura: body._id,
         nombre: body.nombre,
         codigoContenedor: body.codigoContenedor,
         numeroContenedor: body.numeroContenedor,
         calificacion: body.calificacion,
         estado: body.estado,
         zona: body.zona,
-        llenado: body.llenado,
+        residuo: body.residuo,
         observaciones: body.observaciones,
         fecha: body.fecha,
         img: body.img,

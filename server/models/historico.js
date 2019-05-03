@@ -3,21 +3,25 @@ const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let historicoSchema = new Schema({
+    idBasura: {
+        type: String,
+        required: false
+    },
     nombre: {
         type: String,
-        required: [true, 'El nombre es necesario']
+        required: false
     },
     codigoContenedor: {
         type: String,
-        required: [true, 'El codigo del contenedor es necesario']
+        required: false
     },
     numeroContenedor: {
         type: Number,
-        required: [true, 'El número del contenedor es necesario']
+        required: false
     },
     calificacion: {
         type: Number,
-        required: [true, 'La calificación es necesaria']
+        required: false
     },
     estado: {
         type: String,
@@ -25,11 +29,11 @@ let historicoSchema = new Schema({
     },
     zona: {
         type: String,
-        required: [true, 'La zona es necesaria']
+        required: false
     },
-    llenado: { // este campo hay que cambiarlo por un array de strings en el que se va a almacenar los objetos que se encuentran en el contenedor y no deberían estar.
-        type: Number,
-        required: [true, 'El llenado es necesario']
+    residuo: {
+        type: String,
+        required: false
     },
     observaciones: {
         type: String,
@@ -37,11 +41,11 @@ let historicoSchema = new Schema({
     },
     fecha: {
         type: String,
-        required: [true, 'La fecha es necesaria']
+        required: false
     },
     img: {
         type: String,
-        required: [true, 'La imagen es necesaria']
+        required: false
     },
     imgContenedor: {
         type: String,
