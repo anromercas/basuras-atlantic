@@ -40,7 +40,7 @@ let basuraSchema = new Schema({
         required: false
     },
     fecha: {
-        type: String,
+        type: Date,
         required: false,
         //  required: [true, 'La fecha es necesaria']
     },

@@ -40,7 +40,7 @@ let historicoSchema = new Schema({
         required: false
     },
     fecha: {
-        type: String,
+        type: Date,
         required: false
     },
     img: {

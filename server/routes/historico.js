@@ -12,7 +12,15 @@ let Historico = require('../models/historico');
 // =================================
 app.get('/historico', verificaToken, (req, res) => {
 
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    let limite = req.query.limite || 5;
+    limite = Number(limite);
+
     Historico.find({})
+        .skip(desde)
+        .limit(limite)
         .sort('fecha')
         .exec((err, historicos) => {
             if (err) {
@@ -40,29 +48,39 @@ app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
 
     let codigoContenedor = req.params.codigoContenedor;
 
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    let limite = req.query.limite || 5;
+    limite = Number(limite);
+
     // esto tengo que cambiarlo por find y buscar el codigoBasura
-    Historico.find({ 'codigoContenedor': codigoContenedor }, (err, historicoDB) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
+    Historico.find({ 'codigoContenedor': codigoContenedor })
+        .skip(desde)
+        .limit(limite)
+        .exec((err, historicoDB) => {
 
-        if (!historicoDB) {
-            return res.status(500).json({
-                ok: false,
-                err: {
-                    message: 'El id no existe'
-                }
-            });
-        }
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
 
-        res.json({
-            ok: true,
-            historico: historicoDB
+            if (!historicoDB) {
+                return res.status(500).json({
+                    ok: false,
+                    err: {
+                        message: 'El id no existe'
+                    }
+                });
+            }
+
+            res.json({
+                ok: true,
+                historico: historicoDB
+            });
         });
-    });
 
 });
 
