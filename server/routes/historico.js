@@ -76,9 +76,13 @@ app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
                 });
             }
 
-            res.json({
-                ok: true,
-                historico: historicoDB
+            Historico.countDocuments({}, (err, conteo) => {
+
+                res.json({
+                    ok: true,
+                    historicos,
+                    total: conteo
+                });
             });
         });
 
