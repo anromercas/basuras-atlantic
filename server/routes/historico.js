@@ -80,7 +80,7 @@ app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
 
                 res.json({
                     ok: true,
-                    historicoDB,
+                    historicos: historicoDB,
                     total: conteo
                 });
             });
