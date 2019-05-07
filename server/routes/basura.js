@@ -127,16 +127,13 @@ app.put('/basura/:id', verificaToken, (req, res) => {
 
     let basura = {
         nombre: body.nombre,
-        // codigoContenedor: body.codigoContenedor,
         numeroContenedor: body.numeroContenedor,
         calificacion: body.calificacion,
         zona: body.zona,
-        llenado: body.llenado,
+        residuo: body.residuo,
+        estado: body.estado,
         observaciones: body.observaciones,
-        fecha: body.fecha,
-        //  img: body.img,
-        //  imgContenedor: body.imgContenedor,
-        //  imgDetalle: body.imgDetalle
+        fecha: body.fecha
     };
 
     Basura.findByIdAndUpdate(id, basura, options, (err, basuraDB) => {
