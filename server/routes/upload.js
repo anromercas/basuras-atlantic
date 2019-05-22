@@ -61,7 +61,7 @@ app.put('/upload/:tipo/:id', verificaToken, function(req, res) {
     // cambiar nombre al archivo
     let nombreArchivo = `${id}-${ new Date().getMilliseconds() }.${extension}`;
 
-    img.mv(`uploads/${tipo}/${nombreArchivo}`, (err) => {
+    img.mv(`./uploads/${tipo}/${nombreArchivo}`, (err) => {
         if (err)
             return res.status(500).json({
                 ok: false,

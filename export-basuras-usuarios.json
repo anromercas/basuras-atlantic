@@ -1,0 +1,5 @@
+{"_id":{"$oid":"5c94db23f4ebb30017a89a62"},"role":"ADMIN_ROLE","estado":true,"nombre":"nuria","email":"test1@mail.com","password":"$2b$10$eRri4XRUPPrm1EeFevjlX.QLXyYQkOWKsZXizkafDHG4nM.URkWM6","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5c94de50bd416100178d56f0"},"role":"USER_ROLE","estado":true,"nombre":"nuria","email":"test2@mail.com","password":"$2b$10$wqs7C84iu7vmGEnCKYrQ/uwMAE9TPqyWNY9vveeHygcZOY6b9520S","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5cbeff9f5e1094001721ddbd"},"role":"ADMIN_ROLE","nombre":"David","email":"david@mail.com","password":"$2b$10$pTt5WaujV6CZYaRpTeeuI.AkwD0PMJYmIUKAVIuGzz3xYT4gvNjIK","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5cbeffa75e1094001721ddbe"},"role":"USER_ROLE","nombre":"David","email":"david2@mail.com","password":"$2b$10$QZy0khh.iJBVVG9V2pCd1OfQyu/qD7W.hVEyN54d3m61IE2Gxg2ju","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5cc035d8f1c2e3001789f0ea"},"role":"ADMIN_ROLE","nombre":"nuria","email":"nuria@mail.com","password":"$2b$10$wFkfW9ZdNBYcf5N76dSsruw4IjB7H6/kDIpF1dmZcD1gUDxxFf7rC","__v":{"$numberInt":"0"}}
