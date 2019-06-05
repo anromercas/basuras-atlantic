@@ -8,5 +8,6 @@ app.use(require('./basura'));
 app.use(require('./historico'));
 app.use(require('./upload'));
 app.use(require('./imagenes'));
+app.use(require('./mail'));
 
 module.exports = app;
