@@ -42,7 +42,7 @@ app.get('/historico', verificaToken, (req, res) => {
 });
 
 // =================================
-// Mostrar un historico por codigo de basura
+// Mostrar un historico por el codigo de basura
 // =================================
 app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
 
@@ -86,6 +86,36 @@ app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
             });
         });
 
+});
+
+// =================================
+// Mostrar un historico por tramo de fechas
+// =================================
+
+app.get('/historico-entre-fechas', (req, res) => {
+
+    let fechaDesde = req.body.fechadesde;
+    let fechaHasta = req.body.fechahasta;
+
+  Historico.find( {$and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] } )
+            .exec((err, historicos) => {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        err
+                    });
+                }
+               
+                Historico.countDocuments({}, (err, conteo) => {
+
+                    res.json({
+                        ok: true,
+                        historicos,
+                        total: conteo
+                    });
+                });
+            
+            });
 });
 
 // =================================
