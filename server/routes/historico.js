@@ -106,7 +106,7 @@ app.get('/historico-entre-fechas', (req, res) => {
                     });
                 }
                
-                Historico.countDocuments({}, (err, conteo) => {
+                Historico.countDocuments({$and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] }, (err, conteo) => {
 
                     res.json({
                         ok: true,
