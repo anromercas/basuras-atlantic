@@ -30,6 +30,7 @@ app.post('/nueva-basura-email', (req, res) => {
         nombreContenedor: body.nombreContenedor,
         accion: body.accion,
         observaciones: body.observaciones,
+        numeroContenedor: body.numeroContenedor,
     });
 
     let mailOptions = {
