@@ -94,8 +94,8 @@ app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
 
 app.get('/historico-entre-fechas', (req, res) => {
 
-    let fechaDesde = req.body.fechadesde;
-    let fechaHasta = req.body.fechahasta;
+    let fechaDesde = req.query.fechadesde;
+    let fechaHasta = req.query.fechahasta;
 
   Historico.find( {$and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] } )
             .exec((err, historicos) => {
