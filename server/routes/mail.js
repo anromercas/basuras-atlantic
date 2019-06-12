@@ -34,7 +34,7 @@ app.post('/nueva-basura-email', (req, res) => {
 
     let mailOptions = {
         // cuenta de correo a la que se va a enviar el correo
-        to: 'nuria@cornersafety.com',
+        to: 'antonio.gil.fierro@gmail.com',
         subject: 'Añadir/Modificar Contenedor',
         text: JSON.stringify(bodyMail)
     };
