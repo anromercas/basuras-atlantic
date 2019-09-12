@@ -31,6 +31,13 @@ let usuarioSchema = new Schema({
         default: 'USER_ROLE',
         enum: rolesValidos
     },
+    twofactor: {
+        secret: String,
+        tempSecret: String,
+        dataURL: String,
+        otpURL: String,
+        required: false
+    }
 
 });
 

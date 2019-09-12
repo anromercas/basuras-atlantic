@@ -19,7 +19,7 @@ app.get('/usuario', verificaToken, (req, res) => {
     let limite = req.query.limite || 5;
     limite = Number(limite);
 
-    Usuario.find({}, 'nombre email role estado img')
+    Usuario.find({}, 'nombre email role estado img twofactor')
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
@@ -76,12 +76,12 @@ app.post('/usuario' /*, [verificaToken  , verificaAdmin_Role  ]*/ , (req, res) =
 // =================================
 app.put('/usuario/:id', verificaToken, (req, res) => {
     let id = req.params.id;
-    let body = _.pick(req.body, ['nombre', 'email', 'img', 'estado']);
+    let body = _.pick(req.body, ['nombre', 'email', 'img']);
 
 
 
     let options = {
-        new: true,
+        new: false,
         runValidators: true,
         context: 'query'
     };
