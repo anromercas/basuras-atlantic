@@ -260,7 +260,7 @@ app.post('/login', (req, res) => {
             });
         }
 
-        if( !usuarioDB.twofactor/*  || !usuarioDB.twofactor.secret  */) { // 2fa no está habilitado por el usuario
+        if( !usuarioDB.twofactor  || !usuarioDB.twofactor.secret  ) { // 2fa no está habilitado por el usuario
     
             res.status(205).json({
                 ok: false,
