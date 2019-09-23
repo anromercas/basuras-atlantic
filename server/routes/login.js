@@ -260,20 +260,17 @@ app.post('/login', (req, res) => {
             });
         }
 
-        /* if( !usuarioDB.twofactor || !usuarioDB.twofactor.secret ) { // 2fa no está habilitado por el usuario
-
-            //login sin 2FA
-            let token = jwt.sign({
-                usuario: usuarioDB
-            }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN }); // caducidad en middleware autenticacion
+        if( !usuarioDB.twofactor/*  || !usuarioDB.twofactor.secret  */) { // 2fa no está habilitado por el usuario
     
-            res.json({
-                ok: true,
-                usuario: usuarioDB,
-                token
+            res.status(205).json({
+                ok: false,
+                err: {
+                    message: 'Debe configurar el 2FA antes de continuar'
+                },
+                usuario: usuarioDB
             });
             
-        } else { */ // 2FA habilitado
+        } else { // 2FA habilitado
             // verificar si se ha pasado otp por las cabeceras, si no preguntar por OTP
             if ( !req.headers['x-otp']) {
                 return res.status(206).json({
@@ -306,7 +303,7 @@ app.post('/login', (req, res) => {
                     }
                 });
             }
-     //   }
+        }
     });
 
 });
