@@ -288,13 +288,18 @@ app.post('/login', (req, res) => {
                 token: req.headers['x-otp']
             });
             if ( verificar ) {
+
                 //usuario autenticado
+                let token = jwt.sign({
+                    usuario: usuarioDB
+                }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN }); // caducidad en middleware autenticacion
+
                 return res.json({
                     ok: true,
                     message: 'usuario con OTP',
                     usuario: usuarioDB,
                     token
-                })
+                });
             } else {
                 return res.status(400).json({
                     ok: false,
