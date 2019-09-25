@@ -263,8 +263,6 @@ app.post('/login', (req, res) => {
             });
         }
 
-        console.log(usuarioDB.twofactor === 'null');
-
         if( usuarioDB.twofactor === null ) { // 2fa no está habilitado por el usuario
     
             res.status(205).json({
