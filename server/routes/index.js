@@ -10,4 +10,11 @@ app.use(require('./upload'));
 app.use(require('./imagenes'));
 app.use(require('./mail'));
 
+app.get('/', (req, res) => {
+    res.json({
+        ok: true,
+        message: 'Api rest Residuos Urbanos Atlactic'
+    });
+});
+
 module.exports = app;

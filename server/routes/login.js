@@ -21,7 +21,7 @@ app.post('/login/twofactor/setup/:id', (req, res) => {
     let id = req.params.id;
 
     let options = {
-        new: false,
+        new: true,
         runValidators: true,
         context: 'query'
     };
@@ -126,7 +126,8 @@ app.post('/login/twofactor/verify/:id', function(req, res){
     
     let id = req.params.id;
 
-    Usuario.findById(id, (err, userDB) => {
+    Usuario.findById(id)
+    .exec( async (err, userDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -151,11 +152,13 @@ app.post('/login/twofactor/verify/:id', function(req, res){
 
         if(verified){
             userDB.twofactor.secret = userDB.twofactor.tempSecret;//set secret, confirm 2fa
+            await userDB.updateOne(userDB);
             return res.json({
                 ok: true,
                 message: 'Two-factor auth enabled',
                 usuario: userDB
             });
+            
         }
         return res.status(400).send('Invalid token, verification failed');
     });
@@ -260,7 +263,9 @@ app.post('/login', (req, res) => {
             });
         }
 
-        if( !usuarioDB.twofactor  || !usuarioDB.twofactor.secret  ) { // 2fa no está habilitado por el usuario
+        console.log(usuarioDB.twofactor === 'null');
+
+        if( usuarioDB.twofactor === null ) { // 2fa no está habilitado por el usuario
     
             res.status(205).json({
                 ok: false,
@@ -277,8 +282,8 @@ app.post('/login', (req, res) => {
                     ok: false,
                     err: {
                         message: 'Introducir OTP para continuar'
-                    }
-                    
+                    },
+                    usuario: usuarioDB
                 });
             }
             // validar OTP

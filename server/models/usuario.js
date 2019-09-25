@@ -32,11 +32,14 @@ let usuarioSchema = new Schema({
         enum: rolesValidos
     },
     twofactor: {
-        secret: String,
-        tempSecret: String,
-        dataURL: String,
-        otpURL: String,
-        required: false
+        type:
+        {
+            secret: String,
+            tempSecret: String,
+            dataURL: String,
+            otpURL: String
+        },
+        default: null
     }
 
 });
@@ -47,7 +50,7 @@ usuarioSchema.methods.toJSON = function() {
     let userObject = user.toObject();
     delete userObject.password;
     return userObject;
-}
+};
 
 usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
 
