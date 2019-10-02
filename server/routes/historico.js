@@ -21,7 +21,7 @@ app.get('/historico', verificaToken, (req, res) => {
     Historico.find({})
         .skip(desde)
         .limit(limite)
-        .sort('fecha')
+        .sort({ _id: -1 })
         .exec((err, historicos) => {
             if (err) {
                 return res.status(400).json({
@@ -42,6 +42,53 @@ app.get('/historico', verificaToken, (req, res) => {
 });
 
 // =================================
+// Mostrar un historico por el resíduo
+// =================================
+app.get('/historico/:residuo', verificaToken, (req, res) => {
+
+    let residuo = req.params.residuo;
+
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    let limite = req.query.limite || 10;
+    limite = Number(limite);
+
+    Historico.find({ 'nombre': { $regex: residuo } })
+        .skip(desde)
+        .limit(limite)
+        .sort({ _id: -1 })
+        .exec((err, historicoDB) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            if (!historicoDB) {
+                return res.status(500).json({
+                    ok: false,
+                    err: {
+                        message: 'El residuo no existe'
+                    }
+                });
+            }
+
+            Historico.countDocuments({}, (err, conteo) => {
+
+                res.json({
+                    ok: true,
+                    historicos: historicoDB,
+                    total: conteo
+                });
+            });
+        });
+
+});
+
+// =================================
 // Mostrar un historico por el codigo de basura
 // =================================
 app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
@@ -54,10 +101,10 @@ app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
     let limite = req.query.limite || 5;
     limite = Number(limite);
 
-    // esto tengo que cambiarlo por find y buscar el codigoBasura
     Historico.find({ 'codigoContenedor': codigoContenedor })
         .skip(desde)
         .limit(limite)
+        .sort({ _id: -1 })
         .exec((err, historicoDB) => {
 
             if (err) {

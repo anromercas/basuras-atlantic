@@ -43,6 +43,20 @@ app.get('/usuario', verificaToken, (req, res) => {
 });
 
 // =================================
+// Mostrar usuario por token
+// =================================
+app.get('/usuario-token', verificaToken, (req,res) => {
+    const usuario = req.usuario;
+
+    res.json({
+        ok: true,
+        message: 'usuario por token',
+        usuario
+    });
+});
+
+
+// =================================
 // Crear usuario
 // =================================
 app.post('/usuario' /*, [verificaToken  , verificaAdmin_Role  ]*/ , (req, res) => {
