@@ -44,9 +44,10 @@ app.get('/historico', verificaToken, (req, res) => {
 // =================================
 // Mostrar un historico por el resíduo
 // =================================
-app.get('/historico/:residuo', verificaToken, (req, res) => {
+app.get('/historico-residuo', verificaToken, (req, res) => {
 
-    let residuo = req.params.residuo;
+    let residuo = req.query.residuo || '';
+    console.log('Residuo: ' + residuo);
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -76,7 +77,7 @@ app.get('/historico/:residuo', verificaToken, (req, res) => {
                 });
             }
 
-            Historico.countDocuments({}, (err, conteo) => {
+            Historico.countDocuments({ 'nombre': { $regex: residuo } }, (err, conteo) => {
 
                 res.json({
                     ok: true,
