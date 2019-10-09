@@ -47,15 +47,15 @@ app.get('/historico', verificaToken, (req, res) => {
 app.get('/historico-residuo', verificaToken, (req, res) => {
 
     let residuo = req.query.residuo || '';
-    console.log('Residuo: ' + residuo);
+    
+    let fechaDesde = req.query.fechadesde || new Date();
+    let fechaHasta = req.query.fechahasta || new Date();
 
     let desde = req.query.desde || 0;
-    desde = Number(desde);
 
     let limite = req.query.limite || 10;
-    limite = Number(limite);
 
-    Historico.find({ 'nombre': { $regex: residuo } })
+    Historico.find({ 'nombre': { $regex: residuo }, $and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] })
         .skip(desde)
         .limit(limite)
         .sort({ _id: -1 })
@@ -77,7 +77,7 @@ app.get('/historico-residuo', verificaToken, (req, res) => {
                 });
             }
 
-            Historico.countDocuments({ 'nombre': { $regex: residuo } }, (err, conteo) => {
+            Historico.countDocuments({ 'nombre': { $regex: residuo }, $and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] }, (err, conteo) => {
 
                 res.json({
                     ok: true,

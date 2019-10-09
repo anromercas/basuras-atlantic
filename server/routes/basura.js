@@ -81,7 +81,7 @@ app.get('/basura/comprobar-fecha-realizado/:id', verificaToken, (req, res) => {
                 fechaValida: false,
             });
 
-        } else if ( diaSemana + restaEnDias > 6 ) {
+        } else if ( diaSemana + restaEnDias > 6  ) {
             res.json({
                 ok: true,
                 message: 'validar Fecha calificacion realizada en semana',
@@ -89,7 +89,7 @@ app.get('/basura/comprobar-fecha-realizado/:id', verificaToken, (req, res) => {
                 diaSemana,
                 restaEnDias
             });
-        } else if ( diaSemana + restaEnDias < 7 ) {
+        } else if ( diaSemana + restaEnDias <= 6 ) {
             res.json({
                 ok: true,
                 message: 'validar Fecha calificacion realizada en semana',
