@@ -52,8 +52,9 @@ app.get('/historico-residuo', verificaToken, (req, res) => {
     let fechaHasta = req.query.fechahasta || new Date();
 
     let desde = req.query.desde || 0;
-
+    desde = Number(desde);
     let limite = req.query.limite || 10;
+    limite = Number(limite);
 
     Historico.find({ 'nombre': { $regex: residuo }, $and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] })
         .skip(desde)

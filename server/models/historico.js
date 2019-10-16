@@ -54,6 +54,11 @@ let historicoSchema = new Schema({
     imgDetalle: {
         type: String,
         required: false
+    },
+    usuario: {
+        type:Schema.ObjectId, 
+        ref: 'Usuario', 
+        required: [true, 'El usuario es necesario'] 
     }
 
 });

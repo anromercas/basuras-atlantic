@@ -165,9 +165,6 @@ app.post('/login/twofactor/verify/:id', function(req, res){
 
 });
 
-
-
-
 // ===========================================
 // Renovación de token
 // ===========================================
@@ -236,6 +233,7 @@ app.post('/loginApp', (req, res) => {
 app.post('/login', (req, res) => {
 
     let body = req.body;
+    
 
     Usuario.findOne({ email: body.email }, (err, usuarioDB) => {
         if (err) {
@@ -253,10 +251,26 @@ app.post('/login', (req, res) => {
                 }
             });
         }
+        
+       
+         
+        if( usuarioDB.habilitada === false ) {       
 
-        if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
             return res.status(400).json({
                 ok: false,
+                err: {
+                    message: 'La cuenta está deshabilitada, debe ponerse en contacto con el administrador'
+                }
+            });
+        }
+
+        
+
+        if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
+            
+            return res.status(400).json({
+                ok: false,
+                usuarioDB,
                 err: {
                     message: 'Usuario o (contraseña) incorrectos'
                 }
