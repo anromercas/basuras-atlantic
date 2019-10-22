@@ -266,8 +266,6 @@ app.post('/loginApp', (req, res) => {
                 usuarioDB.save();
             }
 
-            console.log('Contraseña erronea ' + usuarioDB.intentos);
-
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -369,6 +367,23 @@ app.post('/login', (req, res) => {
         
 
         if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
+            if( !usuarioDB.intentos ) {
+                usuarioDB.intentos = 0;
+            }
+            usuarioDB.intentos = usuarioDB.intentos + 1;
+                        
+            if( usuarioDB.intentos === 3 ) {
+                usuarioDB.habilitada = false;
+                usuarioDB.save();
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        message: 'La cuenta está deshabilitada, debe ponerse en contacto con el administrador'
+                    }
+                });
+            } else {
+                usuarioDB.save();
+            }
             
             return res.status(400).json({
                 ok: false,
@@ -412,6 +427,9 @@ app.post('/login', (req, res) => {
                 let token = jwt.sign({
                     usuario: usuarioDB
                 }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN }); // caducidad en middleware autenticacion
+
+                usuarioDB.intentos = 0;
+                usuarioDB.save();
 
                 return res.json({
                     ok: true,

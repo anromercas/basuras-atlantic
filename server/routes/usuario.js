@@ -166,7 +166,6 @@ app.put('/usuario/cambiar-passwd/:id', (req, res) => {
     let id = req.params.id;
     let body = req.body;
     let passAnt = body.passAnt;
-    let passNueva = body.password;
 
     // aqui configuro los requisitos que debe cumplir la contraseña
     var schema = new passwordValidator();
