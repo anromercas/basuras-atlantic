@@ -15,7 +15,7 @@ let basuraSchema = new Schema({
     },
     numeroContenedor: {
         type: Number,
-        required: [true, 'El número del contenedor es necesario']
+    //    required: [true, 'El número del contenedor es necesario']
     },
     calificacion: {
         type: Number,
@@ -60,7 +60,7 @@ let basuraSchema = new Schema({
     usuario: {
         type:Schema.ObjectId, 
         ref: 'Usuario', 
-        required: [true, 'El usuario es necesario'] 
+//         required: [true, 'El usuario es necesario'] 
     }
 
 });

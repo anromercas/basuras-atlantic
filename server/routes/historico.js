@@ -188,6 +188,7 @@ app.post('/historico', verificaToken, (req, res) => {
         img: body.img,
         imgContenedor: body.imgContenedor,
         imgDetalle: body.imgDetalle,
+        usuario: req.usuario._id
     });
 
     historico.save((err, historicoDB) => {

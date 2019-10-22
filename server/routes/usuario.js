@@ -1,6 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
+const password = require('secure-random-password');
+var passwordValidator = require('password-validator');
 
 const Usuario = require('../models/usuario');
 const { verificaToken /* , verificaAdmin_Role */ } = require('../middlewares/autenticacion');
@@ -61,14 +63,17 @@ app.get('/usuario-token', verificaToken, (req,res) => {
 // =================================
 app.post('/usuario' /*, [verificaToken  , verificaAdmin_Role  ]*/ , (req, res) => {
     let body = req.body;
+
+    const pass = password.randomPassword({ characters: [password.lower, password.upper, password.digits] });
+
     let usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: bcrypt.hashSync(body.password, 10),
+        password: bcrypt.hashSync( pass, 10 ),
         role: body.role,
         twofactor: null,
         fechaPass: new Date(),
-        arrayPass: [bcrypt.hashSync(body.password, 10)],
+        arrayPass: [bcrypt.hashSync(pass, 10)],
         habilitada: true,
         primerAcceso: true,
     });
@@ -85,7 +90,9 @@ app.post('/usuario' /*, [verificaToken  , verificaAdmin_Role  ]*/ , (req, res) =
 
         return res.json({
             ok: true,
-            usuario: usuarioDB
+            message: 'Usuario creado',
+            usuario: usuarioDB,
+            pass
         });
     });
 });
@@ -103,7 +110,7 @@ app.put('/usuario/habilita-usuario/:id', verificaToken, (req, res) => {
         context: 'query'
     };
 
-    Usuario.findByIdAndUpdate(id, {habilitada: true}, options, (err, usuarioDB) => {
+    Usuario.findByIdAndUpdate(id, {habilitada: true, intentos: 0}, options, (err, usuarioDB) => {
 
         if (err) {
             return res.status(400).json({
@@ -155,16 +162,24 @@ app.put('/usuario/:id', verificaToken, (req, res) => {
 // =================================
 // Cambiar Contraseña
 // =================================
-app.put('/usuario/cambiar-passwd/:id', verificaToken, (req, res) => {
+app.put('/usuario/cambiar-passwd/:id', (req, res) => {
     let id = req.params.id;
     let body = req.body;
+    let passAnt = body.passAnt;
+    let passNueva = body.password;
 
-    let options = {
-        new: true,
-        runValidators: true,
-        context: 'query',
-        upsert: true
-    };
+    // aqui configuro los requisitos que debe cumplir la contraseña
+    var schema = new passwordValidator();
+
+    schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits()                                 // Must have digits
+    .has().letters()                                // Must have letters
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
     let pass = bcrypt.hashSync(body.password, 10);
 
@@ -177,6 +192,17 @@ app.put('/usuario/cambiar-passwd/:id', verificaToken, (req, res) => {
             });
         }
 
+        // valido la contraseña
+        const validate = schema.validate(body.password, { list: true });
+        // console.log(validate);
+        if( validate.length > 0 ) {
+            return res.status(400).json({
+                ok: false,
+                message: 'La contraseña debe contener 8 caracteres, 1 mayúscula, 1 minúscula y 1 número como mínimo',
+                validate
+            });
+        }
+
         if(!usuarioDB.arrayPass) {
             return res.status(400).json({
                 ok: false,
@@ -184,6 +210,7 @@ app.put('/usuario/cambiar-passwd/:id', verificaToken, (req, res) => {
                 err
             });
         }
+
 
         // busco en el array si las contraseñas se han usado antes
         let arrayPass = usuarioDB.arrayPass;
@@ -198,6 +225,15 @@ app.put('/usuario/cambiar-passwd/:id', verificaToken, (req, res) => {
                 });
             }
         }
+
+        // comparo la contraseña anterior que me mandan con la contraseña guardada para verificar que es el usuario de la cuenta
+        if( !bcrypt.compareSync( passAnt, usuarioDB.password ) ) {
+            return res.status(400).json({
+                ok: false,
+                message: 'La contraseña anterior no es correcta'
+            });
+        }
+
         // guardo la contraseña en el campo password y en el array
         usuarioDB.password = pass;
         if( arrayPass.length === 10 ) {
@@ -206,6 +242,10 @@ app.put('/usuario/cambiar-passwd/:id', verificaToken, (req, res) => {
         usuarioDB.arrayPass.push(pass);
         // actualizo el campo fechaPass
         usuarioDB.fechaPass = new Date();
+
+        if( usuarioDB.primerAcceso ) {
+            usuarioDB.primerAcceso = false;
+        }
 
         usuarioDB.save(( err ) => {
 
@@ -230,7 +270,7 @@ app.put('/usuario/cambiar-passwd/:id', verificaToken, (req, res) => {
 // =================================
 app.delete('/usuario/:id', verificaToken, (req, res) => {
 
-    let id = req.params.id;
+    const id = req.params.id;
 
     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
         if (err) {

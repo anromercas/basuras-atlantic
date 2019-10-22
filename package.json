@@ -20,7 +20,9 @@
         "mongoose": "^5.4.19",
         "mongoose-unique-validator": "^2.0.2",
         "nodemailer": "^6.2.1",
+        "password-validator": "^5.0.2",
         "qrcode": "^1.4.1",
+        "secure-random-password": "^0.2.1",
         "speakeasy": "^2.0.0",
         "underscore": "^1.9.1"
     }

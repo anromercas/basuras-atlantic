@@ -153,7 +153,8 @@ app.post('/basura', verificaToken, (req, res) => {
         fecha: body.fecha,
         img: body.img,
         imgContenedor: body.imgContenedor,
-        imgDetalle: body.imgDetalle
+        imgDetalle: body.imgDetalle,
+        usuario: req.usuario._id
     });
 
     basura.save((err, basuraDB) => {
@@ -202,7 +203,8 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         residuo: body.residuo,
         estado: body.estado,
         observaciones: body.observaciones,
-        fecha: body.fecha
+        fecha: body.fecha,
+        usuario: req.usuario._id
     };
 
     Basura.findByIdAndUpdate(id, basura, options, (err, basuraDB) => {

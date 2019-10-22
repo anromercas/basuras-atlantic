@@ -203,7 +203,71 @@ app.post('/loginApp', (req, res) => {
             });
         }
 
+        if(usuarioDB.primerAcceso) {
+            return res.status(206).json({
+                ok: false,
+                err: {
+                    message: 'Primer Acceso: Debe cambiar la contraseña para continuar'
+                },
+                id: usuarioDB.id
+            });
+        } 
+
+        if( usuarioDB.habilitada === false ) {       
+
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'La cuenta está deshabilitada, debe ponerse en contacto con el administrador'
+                }
+            });
+        }
+
+        if( !usuarioDB.fechaPass ) {
+            usuarioDB.fechaPass = new Date();
+            usuarioDB.save();
+        }
+
+        // comprobar fecha de última contraseña
+        const fechaPass = usuarioDB.fechaPass;
+        // convierto la fecha a DATE
+        const fechaConvertida = new Date(fechaPass);
+        //obtengo el dia de hoy
+        const diaHoy = new Date();
+        // Resto los días
+        const resta = diaHoy - fechaConvertida;
+        // convierto en dias la resta
+        const restaEnDias = Math.round(resta/ (1000*60*60*24));
+        if( restaEnDias > 180 ){ // si la resta en dias es mayor a 180 dias = 6 meses (30 * 6)
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'La contraseña ha caducado y debe renovarla'
+                }
+            });
+        }
+
         if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
+            if( !usuarioDB.intentos ) {
+                usuarioDB.intentos = 0;
+            }
+            usuarioDB.intentos = usuarioDB.intentos + 1;
+                        
+            if( usuarioDB.intentos === 3 ) {
+                usuarioDB.habilitada = false;
+                usuarioDB.save();
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        message: 'La cuenta está deshabilitada, debe ponerse en contacto con el administrador'
+                    }
+                });
+            } else {
+                usuarioDB.save();
+            }
+
+            console.log('Contraseña erronea ' + usuarioDB.intentos);
+
             return res.status(400).json({
                 ok: false,
                 err: {
@@ -215,6 +279,11 @@ app.post('/loginApp', (req, res) => {
         let token = jwt.sign({
             usuario: usuarioDB
         }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN }); // caducidad en middleware autenticacion
+
+        usuarioDB.intentos = 0;
+        usuarioDB.save();
+
+        console.log('contraseña correcta ' + usuarioDB.intentos);
 
         return res.json({
             ok: true,
@@ -250,9 +319,17 @@ app.post('/login', (req, res) => {
                     message: '(Usuario) o contraseña incorrectos'
                 }
             });
+        } 
+
+        if(usuarioDB.primerAcceso) {
+            return res.status(204).json({
+                ok: false,
+                err: {
+                    message: 'Primer Acceso: Debe cambiar la contraseña para continuar'
+                },
+                id: usuarioDB.id
+            });
         }
-        
-       
          
         if( usuarioDB.habilitada === false ) {       
 
@@ -260,6 +337,31 @@ app.post('/login', (req, res) => {
                 ok: false,
                 err: {
                     message: 'La cuenta está deshabilitada, debe ponerse en contacto con el administrador'
+                }
+            });
+        }
+
+        if( !usuarioDB.fechaPass ) {
+            usuarioDB.fechaPass = new Date();
+            usuarioDB.save();
+        }
+
+        // comprobar fecha de última contraseña
+        const fechaPass = usuarioDB.fechaPass;
+        // convierto la fecha a DATE
+        const fechaConvertida = new Date(fechaPass);
+        //obtengo el dia de hoy
+        const diaHoy = new Date();
+        // Resto los días
+        const resta = diaHoy - fechaConvertida;
+        // convierto en dias la resta
+        const restaEnDias = Math.round(resta/ (1000*60*60*24));
+        console.log(restaEnDias);
+        if( restaEnDias > 180 ){
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'La contraseña ha caducado y debe renovarla'
                 }
             });
         }
