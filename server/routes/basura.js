@@ -34,6 +34,34 @@ app.get('/basura', verificaToken, (req, res) => {
 });
 
 // =================================
+// Mostrar todas las basuras de una zona
+// =================================
+app.get('/basuraPorZona', verificaToken, (req, res) => {
+
+    let zona = req.query.zona || '';
+
+    Basura.find({ 'zona': { $regex: zona } })
+        .sort('numeroContenedor')
+        .exec((err, basuras) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+            Basura.countDocuments({ 'zona': { $regex: zona } }, (err, conteo) => {
+
+                res.json({
+                    ok: true,
+                    basuras,
+                    total: conteo
+                });
+            });
+        });
+
+});
+
+// =================================
 //  Validar fecha realizado
 // =================================
 app.get('/basura/comprobar-fecha-realizado/:id', verificaToken, (req, res) => {

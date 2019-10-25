@@ -170,7 +170,7 @@ app.post('/login/twofactor/verify/:id', function(req, res){
 // ===========================================
 app.get('/login/renuevatoken', (req, res) => {
 
-    var token = jwt.sign({ usuario: req.usuario }, process.env.SEED, { expiresIn: 14400 }) // 4 horas
+    var token = jwt.sign({ usuario: req.usuario }, process.env.SEED, { expiresIn: 14400 }); // 4 horas
 
     res.status(200).json({
         ok: true,
@@ -320,7 +320,7 @@ app.post('/login', (req, res) => {
         } 
 
         if(usuarioDB.primerAcceso) {
-            return res.status(204).json({
+            return res.status(206).json({
                 ok: false,
                 err: {
                     message: 'Primer Acceso: Debe cambiar la contraseña para continuar'
