@@ -281,7 +281,7 @@ app.post('/loginApp', (req, res) => {
         usuarioDB.intentos = 0;
         usuarioDB.save();
 
-        console.log('contraseña correcta ' + usuarioDB.intentos);
+    //    console.log('contraseña correcta ' + usuarioDB.intentos);
 
         return res.json({
             ok: true,
@@ -294,7 +294,7 @@ app.post('/loginApp', (req, res) => {
 
 
 
-// ===========================================
+// =========================================== 
 // Login de usuario con OTP
 // ===========================================
 app.post('/login', (req, res) => {
@@ -322,6 +322,8 @@ app.post('/login', (req, res) => {
         if(usuarioDB.primerAcceso) {
             return res.status(206).json({
                 ok: false,
+                goto: 1,
+                gotoMessage: 'cambiar contraseña',
                 err: {
                     message: 'Primer Acceso: Debe cambiar la contraseña para continuar'
                 },
@@ -398,6 +400,8 @@ app.post('/login', (req, res) => {
     
             res.status(205).json({
                 ok: false,
+                goto: 2,
+                gotoMessage: 'configurar google authentication',
                 err: {
                     message: 'Debe configurar el 2FA antes de continuar'
                 },
