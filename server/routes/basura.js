@@ -1,6 +1,6 @@
 const express = require('express');
 
-let { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
+let { verificaToken, verificaAdmin_Role, verificaSuper_Admin_Role } = require('../middlewares/autenticacion');
 
 let app = express();
 
@@ -261,7 +261,7 @@ app.put('/basura/:id', verificaToken, (req, res) => {
 // =================================
 // Borrar una basura
 // =================================
-app.delete('/basura/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
+app.delete('/basura/:id', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
     // solo un administrador puede borrar una basura
     let id = req.params.id;
 
