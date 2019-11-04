@@ -57,8 +57,7 @@ let historicoSchema = new Schema({
     },
     usuario: {
         type:Schema.ObjectId, 
-        ref: 'Usuario', 
-        required: [true, 'El usuario es necesario'] 
+        ref: 'Usuario'
     }
 
 });

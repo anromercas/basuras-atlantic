@@ -281,8 +281,6 @@ app.post('/loginApp', (req, res) => {
         usuarioDB.intentos = 0;
         usuarioDB.save();
 
-    //    console.log('contraseña correcta ' + usuarioDB.intentos);
-
         return res.json({
             ok: true,
             usuario: usuarioDB,

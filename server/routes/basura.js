@@ -232,6 +232,7 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         estado: body.estado,
         observaciones: body.observaciones,
         fecha: body.fecha,
+        imgContenedor: body.imgContenedor,
         usuario: req.usuario._id
     };
 
