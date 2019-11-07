@@ -299,8 +299,7 @@ app.post('/login', (req, res) => {
 
     let body = req.body;
     
-
-    Usuario.findOne({ email: body.email }, (err, usuarioDB) => {
+    Usuario.findOne({ email: body.email }, async (err, usuarioDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -417,6 +416,22 @@ app.post('/login', (req, res) => {
                     usuario: usuarioDB
                 });
             }
+
+            if ( usuarioDB.twofactor.secret === '' ) {
+                var verified = speakeasy.totp.verify({
+                    secret: usuarioDB.twofactor.tempSecret, //secret of the logged in user
+                    encoding: 'base32',
+                    token: req.body.tokenOTP
+                });
+        
+                console.log(verified);
+        
+                if(verified){
+                    usuarioDB.twofactor.secret = usuarioDB.twofactor.tempSecret;//set secret, confirm 2fa
+                    await usuarioDB.updateOne(usuarioDB);
+                }
+            }
+
             // validar OTP
             var verificar = speakeasy.totp.verify({
                 secret: usuarioDB.twofactor.secret,
