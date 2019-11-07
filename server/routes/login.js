@@ -421,7 +421,7 @@ app.post('/login', (req, res) => {
                 var verified = speakeasy.totp.verify({
                     secret: usuarioDB.twofactor.tempSecret, //secret of the logged in user
                     encoding: 'base32',
-                    token: req.body.tokenOTP
+                    token: req.headers['x-otp']
                 });
         
                 console.log(verified);
