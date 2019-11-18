@@ -395,7 +395,7 @@ app.post('/login', (req, res) => {
 
         if( usuarioDB.twofactor === null ) { // 2fa no está habilitado por el usuario
     
-            return res.status(205).json({
+            return res.status(209).json({
                 ok: false,
                 goto: 2,
                 gotoMessage: 'configurar google authentication',
