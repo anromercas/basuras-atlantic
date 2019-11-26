@@ -160,6 +160,56 @@ app.put('/usuario/:id', verificaToken, (req, res) => {
 });
 
 // =================================
+// reset password
+// =================================
+app.put('/usuario/reset-passwd/:id', verificaToken, (req, res) => {
+    let id = req.params.id;
+
+    const pass = password.randomPassword({ characters: [password.lower, password.upper, password.digits] });
+
+
+    Usuario.findById(id, (err, usuarioDB) => {
+
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+
+        if(!usuarioDB) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'El usuario no existe'
+                }
+            });
+        }
+
+        // guardo la contraseña en el campo password
+        usuarioDB.password = bcrypt.hashSync( pass, 10 );
+
+        usuarioDB.save(( err ) => {
+
+            if(err) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            res.json({
+                ok: true,
+                usuario: usuarioDB,
+                pass
+            });
+        });
+    });
+
+});
+
+
+// =================================
 // Cambiar Contraseña
 // =================================
 app.put('/usuario/cambiar-passwd/:id', (req, res) => {
