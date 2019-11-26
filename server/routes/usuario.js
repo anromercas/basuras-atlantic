@@ -186,6 +186,14 @@ app.put('/usuario/reset-passwd/:id', verificaToken, (req, res) => {
             });
         }
 
+        if(usuarioDB.primerAcceso === false ) {
+            usuarioDB.primerAcceso = true;
+        }
+
+        if(usuarioDB.intentos > 0 ) {
+            usuarioDB.intentos = 0;
+        }
+
         // guardo la contraseña en el campo password
         usuarioDB.password = bcrypt.hashSync( pass, 10 );
 
