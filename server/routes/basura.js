@@ -260,6 +260,27 @@ app.put('/basura/:id', verificaToken, (req, res) => {
 });
 
 // =================================
+// Purgar Basuras
+// =================================
+app.put('/purgar-basuras', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
+
+    Basura.updateMany({}, {"$set": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        res.json({
+            ok: true,
+            basura: basuraDB
+        });
+    });
+
+});
+
+// =================================
 // Borrar una basura
 // =================================
 app.delete('/basura/:id', [verificaToken, verificaSuper_Admin_Role], (req, res) => {

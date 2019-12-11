@@ -1,6 +1,6 @@
 const express = require('express');
 
-let { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
+let { verificaToken, verificaSuper_Admin_Role } = require('../middlewares/autenticacion');
 
 let app = express();
 
@@ -204,6 +204,29 @@ app.post('/historico', verificaToken, (req, res) => {
             basura: historicoDB
         });
 
+    });
+});
+
+
+// =================================
+// Borrar una basura
+// =================================
+app.delete('/purgar-historico', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
+
+    Historico.deleteMany({}, (err, historicos) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+        
+
+        res.json({
+            ok: true,
+            message: 'historicos Borrados',
+            historicos: historicos
+        });
     });
 });
 
