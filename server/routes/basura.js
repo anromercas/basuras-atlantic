@@ -232,6 +232,7 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         estado: body.estado,
         observaciones: body.observaciones,
         fecha: body.fecha,
+        img: body.img,
         imgContenedor: body.imgContenedor,
         usuario: req.usuario._id
     };
@@ -265,6 +266,29 @@ app.put('/basura/:id', verificaToken, (req, res) => {
 app.put('/purgar-basuras', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
 
     Basura.updateMany({}, {"$set": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        res.json({
+            ok: true,
+            basura: basuraDB
+        });
+    });
+
+});
+
+// =================================
+// Purgar Basuras
+// =================================
+app.put('/purgar-una-basura/:id', [verificaToken], (req, res) => {
+
+    let id = req.params.id;
+
+    Basura.updateOne({_id: id}, {"$set": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
