@@ -1,234 +1,291 @@
-const express = require('express');
+const express = require("express");
 
-let { verificaToken, verificaSuper_Admin_Role } = require('../middlewares/autenticacion');
+let {
+  verificaToken,
+  verificaSuper_Admin_Role
+} = require("../middlewares/autenticacion");
 
 let app = express();
 
-let Historico = require('../models/historico');
-
+let Historico = require("../models/historico");
 
 // =================================
 // Mostrar todo los historicos
 // =================================
-app.get('/historico', verificaToken, (req, res) => {
+app.get("/historico", verificaToken, (req, res) => {
+  let desde = req.query.desde || 0;
+  desde = Number(desde);
 
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
+  let limite = req.query.limite || 5;
+  limite = Number(limite);
 
-    let limite = req.query.limite || 5;
-    limite = Number(limite);
-
-    Historico.find({})
-        .skip(desde)
-        .limit(limite)
-        .sort({ _id: -1 })
-        .exec((err, historicos) => {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    err
-                });
-            }
-            Historico.countDocuments({}, (err, conteo) => {
-
-                res.json({
-                    ok: true,
-                    historicos,
-                    total: conteo
-                });
-            });
+  Historico.find({})
+    .skip(desde)
+    .limit(limite)
+    .sort({ _id: -1 })
+    .exec((err, historicos) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err
         });
-
+      }
+      Historico.countDocuments({}, (err, conteo) => {
+        res.json({
+          ok: true,
+          historicos,
+          total: conteo
+        });
+      });
+    });
 });
 
 // =================================
 // Mostrar un historico por el resíduo
 // =================================
-app.get('/historico-residuo', verificaToken, (req, res) => {
+app.get("/historico-residuo", verificaToken, (req, res) => {
+  let residuo = req.query.residuo || "";
 
-    let residuo = req.query.residuo || '';
-    
-    let fechaDesde = req.query.fechadesde || new Date();
-    let fechaHasta = req.query.fechahasta || new Date();
+  let fechaDesde = req.query.fechadesde || new Date();
+  let fechaHasta = req.query.fechahasta || new Date();
 
-    Historico.find({ 'nombre': { $regex: residuo }, $and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] })
-        .sort({ _id: -1 })
-        .exec((err, historicoDB) => {
-
-            if (err) {
-                return res.status(500).json({
-                    ok: false,
-                    err
-                });
-            }
-
-            if (!historicoDB) {
-                return res.status(500).json({
-                    ok: false,
-                    err: {
-                        message: 'El residuo no existe'
-                    }
-                });
-            }
-
-            Historico.countDocuments({ 'nombre': { $regex: residuo }, $and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] }, (err, conteo) => {
-
-                res.json({
-                    ok: true,
-                    historicos: historicoDB,
-                    total: conteo
-                });
-            });
+  Historico.find({
+    nombre: { $regex: residuo },
+    $and: [
+      { fecha: { $gte: new Date(fechaDesde) } },
+      { fecha: { $lt: new Date(fechaHasta) } }
+    ]
+  })
+    .sort({ _id: -1 })
+    .exec((err, historicoDB) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          err
         });
+      }
 
+      if (!historicoDB) {
+        return res.status(500).json({
+          ok: false,
+          err: {
+            message: "El residuo no existe"
+          }
+        });
+      }
+
+      Historico.countDocuments(
+        {
+          nombre: { $regex: residuo },
+          $and: [
+            { fecha: { $gte: new Date(fechaDesde) } },
+            { fecha: { $lt: new Date(fechaHasta) } }
+          ]
+        },
+        (err, conteo) => {
+          res.json({
+            ok: true,
+            historicos: historicoDB,
+            total: conteo
+          });
+        }
+      );
+    });
 });
 
 // =================================
 // Mostrar un historico por el codigo de basura
 // =================================
-app.get('/historico/:codigoContenedor', verificaToken, (req, res) => {
+app.get("/historico/:codigoContenedor", verificaToken, (req, res) => {
+  let codigoContenedor = req.params.codigoContenedor;
 
-    let codigoContenedor = req.params.codigoContenedor;
+  let desde = req.query.desde || 0;
+  desde = Number(desde);
 
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
+  let limite = req.query.limite || 5;
+  limite = Number(limite);
 
-    let limite = req.query.limite || 5;
-    limite = Number(limite);
-
-    Historico.find({ 'codigoContenedor': codigoContenedor })
-        .skip(desde)
-        .limit(limite)
-        .sort({ _id: -1 })
-        .exec((err, historicoDB) => {
-
-            if (err) {
-                return res.status(500).json({
-                    ok: false,
-                    err
-                });
-            }
-
-            if (!historicoDB) {
-                return res.status(500).json({
-                    ok: false,
-                    err: {
-                        message: 'El id no existe'
-                    }
-                });
-            }
-
-            Historico.countDocuments({}, (err, conteo) => {
-
-                res.json({
-                    ok: true,
-                    historicos: historicoDB,
-                    total: conteo
-                });
-            });
+  Historico.find({ codigoContenedor: codigoContenedor })
+    .skip(desde)
+    .limit(limite)
+    .sort({ _id: -1 })
+    .exec((err, historicoDB) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          err
         });
+      }
 
+      if (!historicoDB) {
+        return res.status(500).json({
+          ok: false,
+          err: {
+            message: "El id no existe"
+          }
+        });
+      }
+
+      Historico.countDocuments({}, (err, conteo) => {
+        res.json({
+          ok: true,
+          historicos: historicoDB,
+          total: conteo
+        });
+      });
+    });
 });
 
 // =================================
 // Mostrar un historico por tramo de fechas
 // =================================
 
-app.get('/historico-entre-fechas', (req, res) => {
+app.get("/historico-entre-fechas", (req, res) => {
+  let fechaDesde = req.query.fechadesde;
+  let fechaHasta = req.query.fechahasta;
 
-    let fechaDesde = req.query.fechadesde;
-    let fechaHasta = req.query.fechahasta;
+  Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(fechaDesde) } },
+      { fecha: { $lt: new Date(fechaHasta) } }
+    ]
+  }).exec((err, historicos) => {
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        err
+      });
+    }
 
-  Historico.find( {$and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] } )
-            .exec((err, historicos) => {
-                if (err) {
-                    return res.status(500).json({
-                        ok: false,
-                        err
-                    });
-                }
-               
-                Historico.countDocuments({$and: [{fecha: {$gte: new Date(fechaDesde)}}, {fecha: {$lt: new Date(fechaHasta)}}] }, (err, conteo) => {
-
-                    res.json({
-                        ok: true,
-                        historicos,
-                        total: conteo
-                    });
-                });
-            
-            });
-});
-
-// =================================
-// Crear nuevo historico 
-// =================================
-app.post('/historico', verificaToken, (req, res) => {
-    // regresa la nueva basura
-    let body = req.body;
-
-    let historico = new Historico({
-        idBasura: body._id,
-        nombre: body.nombre,
-        codigoContenedor: body.codigoContenedor,
-        numeroContenedor: body.numeroContenedor,
-        calificacion: body.calificacion,
-        estado: body.estado,
-        zona: body.zona,
-        residuo: body.residuo,
-        observaciones: body.observaciones,
-        fecha: body.fecha,
-        img: body.img,
-        imgContenedor: body.imgContenedor,
-        imgDetalle: body.imgDetalle,
-        usuario: req.usuario._id
-    });
-
-    historico.save((err, historicoDB) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
-
-        if (!historicoDB) {
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-        }
-
+    Historico.countDocuments(
+      {
+        $and: [
+          { fecha: { $gte: new Date(fechaDesde) } },
+          { fecha: { $lt: new Date(fechaHasta) } }
+        ]
+      },
+      (err, conteo) => {
         res.json({
-            ok: true,
-            basura: historicoDB
+          ok: true,
+          historicos,
+          total: conteo
         });
-
-    });
+      }
+    );
+  });
 });
 
+// =================================
+// Crear nuevo historico
+// =================================
+app.post("/historico", verificaToken, (req, res) => {
+  // regresa la nueva basura
+  let body = req.body;
+
+  let historico = new Historico({
+    idBasura: body._id,
+    nombre: body.nombre,
+    codigoContenedor: body.codigoContenedor,
+    numeroContenedor: body.numeroContenedor,
+    calificacion: body.calificacion,
+    estado: body.estado,
+    zona: body.zona,
+    residuo: body.residuo,
+    observaciones: body.observaciones,
+    fecha: body.fecha,
+    img: body.img,
+    imgContenedor: body.imgContenedor,
+    imgDetalle: body.imgDetalle,
+    usuario: req.usuario._id
+  });
+
+  historico.save((err, historicoDB) => {
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        err
+      });
+    }
+
+    if (!historicoDB) {
+      return res.status(400).json({
+        ok: false,
+        err
+      });
+    }
+
+    res.json({
+      ok: true,
+      basura: historicoDB
+    });
+  });
+});
 
 // =================================
-// Borrar una basura
+// Purgar Historico
 // =================================
-app.delete('/purgar-historico', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
-
+app.delete(
+  "/purgar-historico",
+  [verificaToken, verificaSuper_Admin_Role],
+  (req, res) => {
     Historico.deleteMany({}, (err, historicos) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                err
-            });
-        }
-        
-
-        res.json({
-            ok: true,
-            message: 'historicos Borrados',
-            historicos: historicos
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          err
         });
+      }
+
+      res.json({
+        ok: true,
+        message: "historicos Borrados",
+        historicos: historicos
+      });
     });
+  }
+);
+
+// =================================
+// Borrar Historico por id
+// =================================
+app.delete("/historico/:id", verificaToken, (req, res) => {
+
+    let id = req.params.id;
+
+    Historico.findByIdAndRemove(id, (err, historicos) => {
+        if (err) {
+          return res.status(500).json({
+            ok: false,
+            err
+          });
+        }
+  
+        res.json({
+          ok: true,
+          historicos
+        });
+  });
 });
 
+// =================================
+// Borrar Historicos que no tenga img ni calificacion
+// =================================
+app.delete("/borrar-historico", verificaToken, (req, res) => {
+   
+    Historico.deleteMany({$or: [{img:""}, {calificacion: ""}, {calificacion: null}]}, (err, historicos) => {
+        if (err) {
+          return res.status(500).json({
+            ok: false,
+            err
+          });
+        }
+  
+        res.json({
+          ok: true,
+          message: "historicos Borrados",
+          historicos: historicos
+        });
+  });
+});
 
 module.exports = app;
