@@ -223,7 +223,7 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         context: 'query'
     };
 
-    let basura = {
+    /* let basura = {
         nombre: body.nombre,
         numeroContenedor: body.numeroContenedor,
         codigoContenedor: body.codigoContenedor,
@@ -236,9 +236,9 @@ app.put('/basura/:id', verificaToken, (req, res) => {
         img: body.img,
         imgContenedor: body.imgContenedor,
         usuario: req.usuario._id
-    };
+    }; */
 
-    Basura.findByIdAndUpdate(id, basura, options, (err, basuraDB) => {
+    Basura.findByIdAndUpdate(id, body, options, (err, basuraDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
