@@ -235,23 +235,6 @@ app.put('/historico/:id', verificaToken, (req, res) => {
       context: 'query'
   };
 
- /*  let historico = new Historico({
-    idBasura: body._id,
-    nombre: body.nombre,
-    codigoContenedor: body.codigoContenedor,
-    numeroContenedor: body.numeroContenedor,
-    calificacion: body.calificacion,
-    estado: body.estado,
-    zona: body.zona,
-    residuo: body.residuo,
-    observaciones: body.observaciones,
-    fecha: body.fecha,
-    img: body.img,
-    imgContenedor: body.imgContenedor,
-    imgDetalle: body.imgDetalle,
-    usuario: req.usuario._id
-  }); */
-
   Historico.findByIdAndUpdate(id, body, options, (err, historicoDB) => {
       if (err) {
           return res.status(500).json({
@@ -326,7 +309,7 @@ app.delete("/historico/:id", verificaToken, (req, res) => {
 // =================================
 app.delete("/borrar-historico", verificaToken, (req, res) => {
    
-    Historico.deleteMany({$or: [{img:""}, {calificacion: ""}, {calificacion: null}]}, (err, historicos) => {
+    Historico.deleteMany({$or: [{img:""}, {img: null}, {calificacion: ""}, {calificacion: null}]}, (err, historicos) => {
         if (err) {
           return res.status(500).json({
             ok: false,
