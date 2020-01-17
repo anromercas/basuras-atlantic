@@ -226,6 +226,7 @@ app.put('/basura/:id', verificaToken, (req, res) => {
     let basura = {
         nombre: body.nombre,
         numeroContenedor: body.numeroContenedor,
+        codigoContenedor: body.codigoContenedor,
         calificacion: body.calificacion,
         zona: body.zona,
         residuo: body.residuo,
@@ -265,7 +266,28 @@ app.put('/basura/:id', verificaToken, (req, res) => {
 // =================================
 app.put('/purgar-basuras', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
 
-    Basura.updateMany({}, {"$set": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
+    Basura.updateMany({}, {"$unset": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+
+        res.json({
+            ok: true,
+            basura: basuraDB
+        });
+    });
+
+});
+
+// =================================
+// Purgar Basuras
+// =================================
+app.put('/purgar-basuras-sin-img', [verificaToken, verificaSuper_Admin_Role], (req, res) => {
+
+    Basura.updateMany({img: ""}, {"$unset": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -288,7 +310,7 @@ app.put('/purgar-una-basura/:id', [verificaToken], (req, res) => {
 
     let id = req.params.id;
 
-    Basura.updateOne({_id: id}, {"$set": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
+    Basura.updateOne({_id: id}, {"$unset": {"calificacion": '', "estado": '', "residuo": '', "observaciones": '', "fecha": '', "img": '', "imgDetalle": '', "usuario": null}}, (err, basuraDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,

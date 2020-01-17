@@ -222,6 +222,60 @@ app.post("/historico", verificaToken, (req, res) => {
 });
 
 // =================================
+// Actualizar historico por id
+// =================================
+app.put('/historico/:id', verificaToken, (req, res) => {
+
+  let id = req.params.id;
+  let body = req.body;
+
+  let options = {
+      new: true,
+      runValidators: true,
+      context: 'query'
+  };
+
+ /*  let historico = new Historico({
+    idBasura: body._id,
+    nombre: body.nombre,
+    codigoContenedor: body.codigoContenedor,
+    numeroContenedor: body.numeroContenedor,
+    calificacion: body.calificacion,
+    estado: body.estado,
+    zona: body.zona,
+    residuo: body.residuo,
+    observaciones: body.observaciones,
+    fecha: body.fecha,
+    img: body.img,
+    imgContenedor: body.imgContenedor,
+    imgDetalle: body.imgDetalle,
+    usuario: req.usuario._id
+  }); */
+
+  Historico.findByIdAndUpdate(id, body, options, (err, historicoDB) => {
+      if (err) {
+          return res.status(500).json({
+              ok: false,
+              err
+          });
+      }
+
+      if (!historicoDB) {
+          return res.status(400).json({
+              ok: false,
+              err
+          });
+      }
+
+      res.json({
+          ok: true,
+          historico: historicoDB
+      });
+  });
+
+});
+
+// =================================
 // Purgar Historico
 // =================================
 app.delete(
