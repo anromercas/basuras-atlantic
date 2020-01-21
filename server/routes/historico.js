@@ -1,6 +1,7 @@
 const express = require("express");
 const moment = require("moment");
 const BASURAS = require('../data/data.basuras');
+let Basura = require('../models/basura');
 
 let {
   verificaToken,
@@ -170,7 +171,7 @@ app.get("/historico/:codigoContenedor", verificaToken, (req, res) => {
 // Mostrar un historico por tramo de fechas
 // =================================
 
-app.get("/historico-entre-fechas", (req, res) => {
+app.get("/historico-entre-fechas", verificaToken , (req, res) => {
   let fechaDesde = req.query.fechadesde;
   let fechaHasta = req.query.fechahasta;
 
@@ -205,11 +206,11 @@ app.get("/historico-entre-fechas", (req, res) => {
   });
 });
 
-let Basura = require('../models/basura');
+
 // =================================
 // Zona mejor Segregada mes
 // =================================
-app.get("/zona-mejor-segregada-mes", (req, res) => {
+app.get("/zona-mejor-segregada-mes", verificaToken , (req, res) => {
   let hoy = moment.now();
 
   const inicio = moment(hoy)
@@ -291,7 +292,7 @@ app.get("/zona-mejor-segregada-mes", (req, res) => {
 // =================================
 // Resíduo mejor Segregado mes
 // =================================
-app.get("/residuo-mejor-segregado-mes", (req, res) => {
+app.get("/residuo-mejor-segregado-mes", verificaToken, (req, res) => {
   let hoy = moment.now();
 
   const inicio = moment(hoy)
