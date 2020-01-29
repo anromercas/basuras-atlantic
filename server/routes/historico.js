@@ -206,6 +206,48 @@ app.get("/historico-entre-fechas", verificaToken , (req, res) => {
   });
 });
 
+// =================================
+// Progreso semana
+// =================================
+app.get("/progreso-semana", verificaToken , (req, res) => {
+  let hoy = moment.now();
+
+  const inicio = moment(hoy)
+    .startOf("week").add(1, "d");
+  const fin = moment(hoy).endOf("week").add(1, "d");
+
+  Historico.find({
+      $and: [
+        { fecha: { $gte: new Date(inicio) } },
+        { fecha: { $lt: new Date(fin) } }
+      ]
+  })
+  .sort({ _id: -1 })
+  .exec((err, historicos) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          err
+        });
+      }
+
+      Historico.countDocuments({
+        $and: [
+          { fecha: { $gte: new Date(inicio) } },
+          { fecha: { $lt: new Date(fin) } }
+        ]
+      }, (err, conteo) => {
+        res.json({
+          ok: true,
+          historicos,
+          total: conteo
+        });
+      });
+
+  });
+
+});
+
 
 // =================================
 // Zona mejor Segregada mes
