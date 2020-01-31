@@ -239,8 +239,10 @@ app.get("/progreso-semana", verificaToken , (req, res) => {
       }, (err, conteo) => {
         res.json({
           ok: true,
-          historicos,
-          total: conteo
+          total: conteo,
+          inicio,
+          fin,
+          historicos
         });
       });
 
