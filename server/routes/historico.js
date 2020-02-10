@@ -200,7 +200,7 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                 
 
                 historico.forEach( h => {
-                  historico2.forEach( h2 => {
+                  historico2.forEach( (h2, index) => {
                     let f1 = moment(h.fecha).format('YYYY MM DD');
                     let f2 = moment(h2.fecha).format('YYYY MM DD');
                     let cod1 = h.codigoContenedor;
@@ -208,7 +208,7 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                     if( f1 === f2 && cod1 === cod2 && h.id !== h2.id){
                       console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${h.id} y ${h2.id}`);
                       arrayHistoricosRepe.push(h2);
-                      historico2.shift();
+                      historico2.splice(index, 1);
                     }
                   });
                 });
