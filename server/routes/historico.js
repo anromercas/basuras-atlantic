@@ -217,6 +217,13 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                     }
                     
                   });*/
+
+                  res.json({
+                    ok: true,
+                    message: 'Historicos repetidos borrados',
+                    repe
+                  //  historicos: arrayHistoricosRepe
+                  });
                 }); 
 
                 
@@ -226,12 +233,12 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                   });
                 }); */
 
-                res.json({
+                /* res.json({
                   ok: true,
                   message: 'Historicos repetidos borrados',
                   repe
                 //  historicos: arrayHistoricosRepe
-                });
+                }); */
                 
               });
 
