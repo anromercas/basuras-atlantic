@@ -167,6 +167,129 @@ app.get("/historico/:codigoContenedor", verificaToken, (req, res) => {
     });
 });
 
+
+// =================================
+// Eliminar historicos repetidos V2
+// =================================
+
+app.get("/historicos-repetidos", verificaToken, (req, res) => {
+
+  let arrayHistoricosRepe = [];
+
+  Historico.find({})
+              .sort({ _id: -1 })
+              .exec((err, historicoDB) => {
+                if (err) {
+                  return res.status(500).json({
+                    ok: false,
+                    err
+                  });
+                }
+
+                if (!historicoDB) {
+                  return res.status(500).json({
+                    ok: false,
+                    err: {
+                      message: "El id no existe"
+                    }
+                  });
+                }
+                let historico = historicoDB.slice(0, historicoDB.length -1);
+
+                let historico2 = historicoDB.slice(1);
+                
+
+                historico.forEach( h => {
+                  historico2.forEach( h2 => {
+                    let f1 = moment(h.fecha).format('YYYY MM DD');
+                    let f2 = moment(h2.fecha).format('YYYY MM DD');
+                    let cod1 = h.codigoContenedor;
+                    let cod2 = h2.codigoContenedor;
+                    if( f1 === f2 && cod1 === cod2 && h.fecha !== h2.fecha){
+                      console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${h.fecha} y ${h2.fecha}`);
+                      arrayHistoricosRepe.push(h2);
+                      historico2.shift();
+                    }
+                  });
+                });
+
+                
+                 /* arrayHistoricosRepe.forEach( repe => {
+                  Historico.findByIdAndDelete({_id: repe._id}).exec(( err, repetido ) => {
+                    console.log(repetido);
+                  });
+                }); */
+
+                res.json({
+                  ok: true,
+                  message: 'Historicos repetidos borrados',
+                  historicos: arrayHistoricosRepe
+                });
+                
+              });
+
+});
+
+
+// =================================
+// Eliminar historicos repetidos 
+// =================================
+app.get("/historicos-repetidos/:codigoContenedor", verificaToken, (req, res) => {
+
+        let codigoContenedor = req.params.codigoContenedor;
+
+
+            Historico.find({ codigoContenedor: codigoContenedor })
+              .sort({ _id: -1 })
+              .exec((err, historicoDB) => {
+                if (err) {
+                  return res.status(500).json({
+                    ok: false,
+                    err
+                  });
+                }
+
+                if (!historicoDB) {
+                  return res.status(500).json({
+                    ok: false,
+                    err: {
+                      message: "El id no existe"
+                    }
+                  });
+                }
+                let historico = historicoDB.slice(0, historicoDB.length -1);
+
+                let historico2 = historicoDB.slice(1);
+
+                let arrayHistoricosRepe = [];
+
+                historico.forEach( h => {
+                  historico2.forEach( h2 => {
+                    if(moment(h.fecha).format('YYYY MM DD') === moment(h2.fecha).format('YYYY MM DD')){
+                      arrayHistoricosRepe.push(h2);
+                      historico2.shift();
+                    }
+                  });
+                });
+
+                
+                /*  arrayHistoricosRepe.forEach( repe => {
+                  Historico.findByIdAndDelete({_id: repe._id}).exec(( err, repetido ) => {
+                    console.log(repetido);
+                  });
+                }); */
+                
+              });
+              Historico.countDocuments({ codigoContenedor: codigoContenedor }, (err, conteo) => {
+                res.json({
+                  ok: true,
+                  total: conteo,
+                  message: 'Historicos repetidos borrados',
+                  // historicos: arrayHistoricosRepe
+                });
+              });
+            });
+
 // =================================
 // Mostrar un historico por tramo de fechas
 // =================================
