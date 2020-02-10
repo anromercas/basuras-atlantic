@@ -196,12 +196,12 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                 }
                 let historico = historicoDB.slice(0, historicoDB.length -1);
 
-                let historico2 = historicoDB.slice(1);
-                
+                let historico2 = historicoDB.slice(1);       
 
-                historico.forEach( h => {
-                  historico2.forEach( (h2, index) => {
+                historicoDB.forEach( h => {
+                  historicoDB.forEach( (h2, index) => {
                     let repe = arrayHistoricosRepe.filter( repe => repe.id === h2.id);
+                    console.log(repe);
                     if( !repe ) {
                       let f1 = moment(h.fecha).format('YYYY MM DD');
                       let f2 = moment(h2.fecha).format('YYYY MM DD');
