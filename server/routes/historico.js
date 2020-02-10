@@ -200,19 +200,17 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
 
                 historicoDB.forEach( h => {
                   historicoDB.forEach( (h2, index) => {
-                    let repe = arrayHistoricosRepe.filter( repe => repe.id === h2.id);
-                    console.log(repe);
-                    if( !repe ) {
-                      let f1 = moment(h.fecha).format('YYYY MM DD');
-                      let f2 = moment(h2.fecha).format('YYYY MM DD');
-                      let cod1 = h.codigoContenedor;
-                      let cod2 = h2.codigoContenedor;
-                      if( f1 === f2 && cod1 === cod2 && h.id !== h2.id){
-                        console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${h.id} y ${h2.id}`);
-                        arrayHistoricosRepe.push(h2);
-                        historico2.splice(index, 1);
-                      }
+                   
+                    let f1 = moment(h.fecha).format('YYYY MM DD');
+                    let f2 = moment(h2.fecha).format('YYYY MM DD');
+                    let cod1 = h.codigoContenedor;
+                    let cod2 = h2.codigoContenedor;
+                    if( f1 === f2 && cod1 === cod2 && h.id !== h2.id){
+                      console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${h.id} y ${h2.id}`);
+                      arrayHistoricosRepe.push(h2);
+                      historico2.splice(index, 1);
                     }
+                    
                   });
                 });
 
