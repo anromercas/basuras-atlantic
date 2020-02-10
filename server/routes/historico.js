@@ -205,8 +205,8 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                     let f2 = moment(h2.fecha).format('YYYY MM DD');
                     let cod1 = h.codigoContenedor;
                     let cod2 = h2.codigoContenedor;
-                    if( f1 === f2 && cod1 === cod2 && moment(h.fecha) !== moment(h2.fecha)){
-                      console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${moment(h.fecha)} y ${moment(h2.fecha)}`);
+                    if( f1 === f2 && cod1 === cod2 && moment(h.id) !== moment(h2.id)){
+                      console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${h.id} y ${h2.id}`);
                       arrayHistoricosRepe.push(h2);
                       historico2.shift();
                     }
