@@ -194,7 +194,12 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                     }
                   });
                 }
-                let historico = historicoDB.slice(0, historicoDB.length -1);
+
+                let repe = historicoDB.filter(repe => moment(repe.fecha).format('YYYY MM DD') === moment(repe.fecha).format('YYYY MM DD') && repe.codigoContenedor === repe.codigoContenedor && repe.id !== repe.id );
+                
+                console.log(repe);
+                
+                /* let historico = historicoDB.slice(0, historicoDB.length -1);
 
                 let historico2 = historicoDB.slice(1);       
 
@@ -211,8 +216,8 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                       historico2.splice(index, 1);
                     }
                     
-                  });
-                });
+                  });*/
+                }); 
 
                 
                  /* arrayHistoricosRepe.forEach( repe => {
@@ -224,12 +229,12 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                 res.json({
                   ok: true,
                   message: 'Historicos repetidos borrados',
-                  historicos: arrayHistoricosRepe
+                //  historicos: arrayHistoricosRepe
                 });
                 
               });
 
-});
+//});
 
 
 // =================================
@@ -286,7 +291,7 @@ app.get("/historicos-repetidos/:codigoContenedor", verificaToken, (req, res) => 
                   ok: true,
                   total: conteo,
                   message: 'Historicos repetidos borrados',
-                  // historicos: arrayHistoricosRepe
+                  historicos: arrayHistoricosRepe
                 });
               });
             });
