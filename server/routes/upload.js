@@ -9,6 +9,8 @@ const fs = require('fs');
 const path = require('path');
 const { verificaToken } = require('../middlewares/autenticacion');
 
+const shortid = require('shortid');
+
 app.use(fileUpload({ useTempFiles: true }));
 
 // =================================
@@ -59,7 +61,8 @@ app.put('/upload/:tipo/:id', verificaToken, function(req, res) {
     }
 
     // cambiar nombre al archivo
-    let nombreArchivo = `${id}-${ new Date().getMilliseconds() }.${extension}`;
+
+    let nombreArchivo = `${id}-${ shortid.generate() }.${extension}`;
 
     img.mv(`./uploads/${tipo}/${nombreArchivo}`, (err) => {
         if (err)

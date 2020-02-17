@@ -174,8 +174,6 @@ app.get("/historico/:codigoContenedor", verificaToken, (req, res) => {
 
 app.get("/historicos-repetidos", verificaToken, (req, res) => {
 
-  let arrayHistoricosRepe = [];
-
   Historico.find({})
               .sort({ _id: -1 })
               .exec((err, historicoDB) => {
@@ -195,55 +193,38 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
                   });
                 }
 
-                let repe = historicoDB.filter(repe => moment(repe.fecha).format('YYYY MM DD') === moment(repe.fecha).format('YYYY MM DD') && repe.codigoContenedor === repe.codigoContenedor && repe.id !== repe.id );
-                
-                console.log(repe);
-                
-                /* let historico = historicoDB.slice(0, historicoDB.length -1);
+                let arrayHistoricosRepe = [];
+                let reverse = historicoDB.slice();
 
-                let historico2 = historicoDB.slice(1);       
+                historicoDB.forEach( (h, index) => {
+                  reverse.forEach( (h2, i) => {
+                    let fecha1 = moment(h.fecha).format('L');
+                    let fecha2 = moment(h2.fecha).format('L');
+                    if(fecha1 === fecha2 && h.codigoContenedor === h2.codigoContenedor && h.id !== h2.id ) {
 
-                historicoDB.forEach( h => {
-                  historicoDB.forEach( (h2, index) => {
-                   
-                    let f1 = moment(h.fecha).format('YYYY MM DD');
-                    let f2 = moment(h2.fecha).format('YYYY MM DD');
-                    let cod1 = h.codigoContenedor;
-                    let cod2 = h2.codigoContenedor;
-                    if( f1 === f2 && cod1 === cod2 && h.id !== h2.id){
-                      console.log(`Fecha1: ${f1} y Fecha2: ${f2} && cod1: ${cod1} y cod2: ${cod2} && ${h.id} y ${h2.id}`);
+                      console.log(`Fecha1: ${fecha1} y Fecha2: ${fecha2} && cod1: ${h.codigoContenedor} y cod2: ${h2.codigoContenedor}`);
                       arrayHistoricosRepe.push(h2);
-                      historico2.splice(index, 1);
+                      reverse.splice(i, 1);
+                      historicoDB.splice(i, 1);
                     }
-                    
-                  });*/
-
-                  res.json({
-                    ok: true,
-                    message: 'Historicos repetidos borrados',
-                    repe
-                  //  historicos: arrayHistoricosRepe
                   });
-                }); 
+                });
 
-                
-                 /* arrayHistoricosRepe.forEach( repe => {
+                arrayHistoricosRepe.forEach( repe => {
                   Historico.findByIdAndDelete({_id: repe._id}).exec(( err, repetido ) => {
                     console.log(repetido);
                   });
-                }); */
+                });
 
-                /* res.json({
+                res.json({
                   ok: true,
                   message: 'Historicos repetidos borrados',
-                  repe
-                //  historicos: arrayHistoricosRepe
-                }); */
+                  historicos: arrayHistoricosRepe
+                });
+
                 
+                }); 
               });
-
-//});
-
 
 // =================================
 // Eliminar historicos repetidos 
@@ -251,7 +232,6 @@ app.get("/historicos-repetidos", verificaToken, (req, res) => {
 app.get("/historicos-repetidos/:codigoContenedor", verificaToken, (req, res) => {
 
         let codigoContenedor = req.params.codigoContenedor;
-
 
             Historico.find({ codigoContenedor: codigoContenedor })
               .sort({ _id: -1 })
@@ -271,35 +251,34 @@ app.get("/historicos-repetidos/:codigoContenedor", verificaToken, (req, res) => 
                     }
                   });
                 }
-                let historico = historicoDB.slice(0, historicoDB.length -1);
-
-                let historico2 = historicoDB.slice(1);
 
                 let arrayHistoricosRepe = [];
+                let reverse = historicoDB.reverse();
 
-                historico.forEach( h => {
-                  historico2.forEach( h2 => {
-                    if(moment(h.fecha).format('YYYY MM DD') === moment(h2.fecha).format('YYYY MM DD')){
+                historicoDB.forEach( (h, index) => {
+                  reverse.forEach( (h2, i) => {
+                    let fecha1 = moment(h.fecha).format('L');
+                    let fecha2 = moment(h2.fecha).format('L');
+                    if(fecha1 === fecha2 ) {
                       arrayHistoricosRepe.push(h2);
-                      historico2.shift();
+                      reverse.splice(i, 1);
                     }
                   });
                 });
-
-                
+                                
                 /*  arrayHistoricosRepe.forEach( repe => {
                   Historico.findByIdAndDelete({_id: repe._id}).exec(( err, repetido ) => {
                     console.log(repetido);
                   });
                 }); */
                 
-              });
-              Historico.countDocuments({ codigoContenedor: codigoContenedor }, (err, conteo) => {
-                res.json({
-                  ok: true,
-                  total: conteo,
-                  message: 'Historicos repetidos borrados',
-                  historicos: arrayHistoricosRepe
+                Historico.countDocuments({ codigoContenedor: codigoContenedor }, (err, conteo) => {
+                  res.json({
+                    ok: true,
+                    total: conteo,
+                    message: 'Historicos repetidos borrados',
+                    historicos: arrayHistoricosRepe
+                  });
                 });
               });
             });
