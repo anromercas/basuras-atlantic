@@ -281,7 +281,7 @@ app.post('/loginApp', (req, res) => {
         usuarioDB.intentos = 0;
         usuarioDB.save();
 
-        console.log('Acceso usuario ' + usuarioDB.email);
+        console.log('Acceso usuario desde móvil ' + usuarioDB.email + ' Fecha: ' + Date.now());
 
         return res.json({
             ok: true,
@@ -450,6 +450,8 @@ app.post('/login', (req, res) => {
                 usuarioDB.intentos = 0;
                 usuarioDB.save();
 
+                console.log('Acceso usuario desde web ' + usuarioDB.email + ' Fecha: ' + Date.now());
+                
                 return res.json({
                     ok: true,
                     message: 'usuario con OTP',
