@@ -7,6 +7,7 @@ const speakeasy = require('speakeasy');
 const QRCode = require('qrcode'); //required for converting otp-url to dataUrl
 const path = require('path');
 const _ = require('underscore');
+const moment = require("moment");
 
 
 let { verificaToken } = require('../middlewares/autenticacion');
@@ -281,7 +282,7 @@ app.post('/loginApp', (req, res) => {
         usuarioDB.intentos = 0;
         usuarioDB.save();
 
-        console.log('Acceso usuario desde móvil ' + usuarioDB.email + ' Fecha: ' + Date.now());
+        console.log('Acceso usuario desde móvil ' + usuarioDB.email + ' Fecha: ' + moment(Date.now()).format('L') );
 
         return res.json({
             ok: true,
@@ -450,8 +451,8 @@ app.post('/login', (req, res) => {
                 usuarioDB.intentos = 0;
                 usuarioDB.save();
 
-                console.log('Acceso usuario desde web ' + usuarioDB.email + ' Fecha: ' + Date.now());
-                
+                console.log('Acceso usuario desde web ' + usuarioDB.email + ' Fecha: ' + moment(Date.now()).format('L'));
+
                 return res.json({
                     ok: true,
                     message: 'usuario con OTP',
