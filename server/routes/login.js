@@ -281,6 +281,8 @@ app.post('/loginApp', (req, res) => {
         usuarioDB.intentos = 0;
         usuarioDB.save();
 
+        console.log('Acceso usuario ' + usuarioDB.email);
+
         return res.json({
             ok: true,
             usuario: usuarioDB,
