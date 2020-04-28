@@ -48,12 +48,14 @@ app.get("/historico", verificaToken, (req, res) => {
 // =================================
 app.get("/historico-residuo", verificaToken, (req, res) => {
   let residuo = req.query.residuo || "";
+  let estado = req.query.estado || '';
 
   let fechaDesde = req.query.fechadesde || new Date();
   let fechaHasta = req.query.fechahasta || new Date();
 
   Historico.find({
-    nombre: { $regex: residuo },
+    'nombre': { $regex: residuo },
+    'estado': { $regex: estado },
     $and: [
       { fecha: { $gte: new Date(fechaDesde) } },
       { fecha: { $lt: new Date(fechaHasta) } }
@@ -79,7 +81,8 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
 
       Historico.countDocuments(
         {
-          nombre: { $regex: residuo },
+          'nombre': { $regex: residuo },
+          'estado': { $regex: estado },
           $and: [
             { fecha: { $gte: new Date(fechaDesde) } },
             { fecha: { $lt: new Date(fechaHasta) } }
@@ -102,8 +105,17 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
 app.get('/historicosPorZona', verificaToken, (req, res) => {
 
   let zona = req.query.zona || '';
+  let estado = req.query.estado || '';
 
-  Historico.find({ 'zona': { $regex: zona } })
+  let fechaDesde = req.query.fechadesde || new Date();
+  let fechaHasta = req.query.fechahasta || new Date();
+
+  Historico.find({  'zona': { $regex: zona }, 
+                    'estado': { $regex: estado },
+                    $and: [
+                      { fecha: { $gte: new Date(fechaDesde) } },
+                      { fecha: { $lt: new Date(fechaHasta) } }
+                    ] })
       .sort('numeroContenedor')
       .exec((err, historicos) => {
           if (err) {
@@ -112,7 +124,12 @@ app.get('/historicosPorZona', verificaToken, (req, res) => {
                   err
               });
           }
-          Historico.countDocuments({ 'zona': { $regex: zona } }, (err, conteo) => {
+          Historico.countDocuments({ 'zona': { $regex: zona }, 
+          'estado': { $regex: estado },
+          $and: [
+            { fecha: { $gte: new Date(fechaDesde) } },
+            { fecha: { $lt: new Date(fechaHasta) } }
+          ] }, (err, conteo) => {
 
               res.json({
                   ok: true,
