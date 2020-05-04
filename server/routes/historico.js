@@ -388,11 +388,6 @@ app.get("/progreso-semana", verificaToken , (req, res) => {
 // Zona mejor Segregada mes
 // =================================
 app.get("/zona-mejor-segregada-mes", verificaToken , (req, res) => {
-//  let hoy = moment.now();
-
-  /* const inicio = moment(hoy)
-    .startOf("month")
-    .add(1, "h"); */
   const inicio = moment().subtract(1, 'months');
   const fin = moment();
   let basurasDeZona = [];
@@ -471,12 +466,8 @@ app.get("/zona-mejor-segregada-mes", verificaToken , (req, res) => {
 // Resíduo mejor Segregado mes
 // =================================
 app.get("/residuo-mejor-segregado-mes", verificaToken, (req, res) => {
-  let hoy = moment.now();
-
-  const inicio = moment(hoy)
-    .startOf("month")
-    .add(1, "h");
-  const fin = moment(hoy).endOf("month");
+  const inicio = moment().subtract(1, 'months');
+  const fin = moment();
   let maximo = 0;
   let mejorResiduo;
   let basuras = BASURAS.slice();
