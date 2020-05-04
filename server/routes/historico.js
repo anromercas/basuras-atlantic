@@ -388,12 +388,13 @@ app.get("/progreso-semana", verificaToken , (req, res) => {
 // Zona mejor Segregada mes
 // =================================
 app.get("/zona-mejor-segregada-mes", verificaToken , (req, res) => {
-  let hoy = moment.now();
+//  let hoy = moment.now();
 
-  const inicio = moment(hoy)
+  /* const inicio = moment(hoy)
     .startOf("month")
-    .add(1, "h");
-  const fin = moment(hoy).endOf("month");
+    .add(1, "h"); */
+  const inicio = moment().subtract(1, 'months');
+  const fin = moment();
   let basurasDeZona = [];
   let maximo = 0;
   let mejorZona;
