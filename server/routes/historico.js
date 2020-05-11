@@ -303,7 +303,6 @@ app.get("/historicos-repetidos/:codigoContenedor", verificaToken, (req, res) => 
 // =================================
 // Mostrar un historico por tramo de fechas
 // =================================
-
 app.get("/historico-entre-fechas", verificaToken , (req, res) => {
   let fechaDesde = req.query.fechadesde;
   let fechaHasta = req.query.fechahasta;
@@ -337,6 +336,176 @@ app.get("/historico-entre-fechas", verificaToken , (req, res) => {
       }
     );
   });
+});
+
+// =================================
+// Problemas por zonas
+// =================================
+app.get("/problemas-por-zonas", verificaToken , async (req, res) => {
+  const hoy = moment();
+  const week = moment().subtract(1, 'week');
+  const month = moment().subtract(1, 'months');
+  const year = moment().subtract(1, 'months');
+
+  const semana = await Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(week) } },
+      { fecha: { $lt: new Date(hoy) } }
+    ]
+  });
+
+  const mes = await Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(month) } },
+      { fecha: { $lt: new Date(hoy) } }
+    ]
+  });
+
+  const anio = await Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(year) } },
+      { fecha: { $lt: new Date(hoy) } }
+    ]
+  });
+
+  const arrZonas = ['Zona 1 -','Zona 2', 'Zona 3', 'Zona 4', 'Zona 5', 'Zona 6', 'Zona 7', 'Zona 8', 'Zona 9', 'Zona 10', 'Zona 11', ];
+    let zonaArrSem = [];
+    let zonaArrMes = [];
+    let zonaArrAnio = [];
+    let sumaSemana = [];
+    let sumaMes = [];
+    let sumaAnio = [];
+    arrZonas.forEach( (zona, index) => {
+      zonaArrSem[index] = semana.filter(h => h.zona.includes(zona));
+      zonaArrMes[index] = mes.filter(h => h.zona.includes(zona));
+      zonaArrAnio[index] = anio.filter(h => h.zona.includes(zona));
+      sumaSemana.push({ 
+        'zona': arrZonas[index],
+        'Bueno': zonaArrSem[index].filter( x => x.estado.includes('Bueno')).length,
+        'Roto': zonaArrSem[index].filter( x => x.estado.includes('Roto')).length,
+        'Sucio': zonaArrSem[index].filter( x => x.estado.includes('Sucio')).length,
+        'Fuera de sitio': zonaArrSem[index].filter( x => x.estado.includes('Fuera de sitio')).length,
+        'Exceso de carga': zonaArrSem[index].filter( x => x.estado.includes('Exceso de carga')).length,
+        'Muy vacío': zonaArrSem[index].filter( x => x.estado.includes('Muy vacío')).length,
+        'Otros': zonaArrSem[index].filter( x => x.estado.includes('Otros')).length
+      });
+
+      sumaMes.push({ 
+        'zona': arrZonas[index],
+        'Bueno': zonaArrMes[index].filter( x => x.estado.includes('Bueno')).length,
+        'Roto': zonaArrMes[index].filter( x => x.estado.includes('Roto')).length,
+        'Sucio': zonaArrMes[index].filter( x => x.estado.includes('Sucio')).length,
+        'Fuera de sitio': zonaArrMes[index].filter( x => x.estado.includes('Fuera de sitio')).length,
+        'Exceso de carga': zonaArrMes[index].filter( x => x.estado.includes('Exceso de carga')).length,
+        'Muy vacío': zonaArrMes[index].filter( x => x.estado.includes('Muy vacío')).length,
+        'Otros': zonaArrMes[index].filter( x => x.estado.includes('Otros')).length
+      });
+
+      sumaAnio.push({ 
+        'zona': arrZonas[index],
+        'Bueno': zonaArrAnio[index].filter( x => x.estado.includes('Bueno')).length,
+        'Roto': zonaArrAnio[index].filter( x => x.estado.includes('Roto')).length,
+        'Sucio': zonaArrAnio[index].filter( x => x.estado.includes('Sucio')).length,
+        'Fuera de sitio': zonaArrAnio[index].filter( x => x.estado.includes('Fuera de sitio')).length,
+        'Exceso de carga': zonaArrAnio[index].filter( x => x.estado.includes('Exceso de carga')).length,
+        'Muy vacío': zonaArrAnio[index].filter( x => x.estado.includes('Muy vacío')).length,
+        'Otros': zonaArrAnio[index].filter( x => x.estado.includes('Otros')).length
+      });
+    })
+  
+  
+  res.json({
+    ok: true,
+    semana: sumaSemana,
+    mes: sumaMes,
+    año: sumaAnio
+  });
+});
+
+// =================================
+// Problemas por resíduos
+// =================================
+app.get("/problemas-por-residuos", verificaToken , async (req, res) => {
+
+  const hoy = moment();
+  const week = moment().subtract(1, 'week');
+  const month = moment().subtract(1, 'months');
+  const year = moment().subtract(1, 'months');
+
+  const semana = await Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(week) } },
+      { fecha: { $lt: new Date(hoy) } }
+    ]
+  });
+
+  const mes = await Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(month) } },
+      { fecha: { $lt: new Date(hoy) } }
+    ]
+  });
+
+  const anio = await Historico.find({
+    $and: [
+      { fecha: { $gte: new Date(year) } },
+      { fecha: { $lt: new Date(hoy) } }
+    ]
+  });
+
+    const arrResiduos = BASURAS;
+    let arrSem = [];
+    let arrMes = [];
+    let arrAnio = [];
+    let sumaSemana = [];
+    let sumaMes = [];
+    let sumaAnio = [];
+    arrResiduos.forEach( (residuo, index) => {
+      arrSem[index] = semana.filter(h => h.nombre.includes(residuo.nombre));
+      arrMes[index] = mes.filter(h => h.nombre.includes(residuo.nombre));
+      arrAnio[index] = anio.filter(h => h.nombre.includes(residuo.nombre));
+      sumaSemana.push({ 
+        'Resíduo': arrResiduos[index].nombre,
+        'Bueno': arrSem[index].filter( x => x.estado.includes('Bueno')).length,
+        'Roto': arrSem[index].filter( x => x.estado.includes('Roto')).length,
+        'Sucio': arrSem[index].filter( x => x.estado.includes('Sucio')).length,
+        'Fuera de sitio': arrSem[index].filter( x => x.estado.includes('Fuera de sitio')).length,
+        'Exceso de carga': arrSem[index].filter( x => x.estado.includes('Exceso de carga')).length,
+        'Muy vacío': arrSem[index].filter( x => x.estado.includes('Muy vacío')).length,
+        'Otros': arrSem[index].filter( x => x.estado.includes('Otros')).length
+      });
+
+      sumaMes.push({ 
+        'Resíduo': arrResiduos[index].nombre,
+        'Bueno': arrMes[index].filter( x => x.estado.includes('Bueno')).length,
+        'Roto': arrMes[index].filter( x => x.estado.includes('Roto')).length,
+        'Sucio': arrMes[index].filter( x => x.estado.includes('Sucio')).length,
+        'Fuera de sitio': arrMes[index].filter( x => x.estado.includes('Fuera de sitio')).length,
+        'Exceso de carga': arrMes[index].filter( x => x.estado.includes('Exceso de carga')).length,
+        'Muy vacío': arrMes[index].filter( x => x.estado.includes('Muy vacío')).length,
+        'Otros': arrMes[index].filter( x => x.estado.includes('Otros')).length
+      });
+
+      sumaAnio.push({ 
+        'Resíduo': arrResiduos[index].nombre,
+        'Bueno': arrAnio[index].filter( x => x.estado.includes('Bueno')).length,
+        'Roto': arrAnio[index].filter( x => x.estado.includes('Roto')).length,
+        'Sucio': arrAnio[index].filter( x => x.estado.includes('Sucio')).length,
+        'Fuera de sitio': arrAnio[index].filter( x => x.estado.includes('Fuera de sitio')).length,
+        'Exceso de carga': arrAnio[index].filter( x => x.estado.includes('Exceso de carga')).length,
+        'Muy vacío': arrAnio[index].filter( x => x.estado.includes('Muy vacío')).length,
+        'Otros': arrAnio[index].filter( x => x.estado.includes('Otros')).length
+      });
+    })
+  
+  
+  res.json({
+    ok: true,
+    semana: sumaSemana,
+    mes: sumaMes,
+    año: sumaAnio
+  });
+
 });
 
 // =================================
@@ -458,7 +627,6 @@ app.get("/zona-mejor-segregada-mes", verificaToken , (req, res) => {
             });
           });
           });
-
 });
 
 
