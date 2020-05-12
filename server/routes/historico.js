@@ -381,6 +381,7 @@ app.get("/problemas-por-zonas", verificaToken , async (req, res) => {
       zonaArrAnio[index] = anio.filter(h => h.zona.includes(zona));
       sumaSemana.push({ 
         'zona': arrZonas[index],
+        'Total Contenedores Semana': zonaArrSem[index].length,
         'Bueno': zonaArrSem[index].filter( x => x.estado.includes('Bueno')).length,
         'Roto': zonaArrSem[index].filter( x => x.estado.includes('Roto')).length,
         'Sucio': zonaArrSem[index].filter( x => x.estado.includes('Sucio')).length,
@@ -392,6 +393,17 @@ app.get("/problemas-por-zonas", verificaToken , async (req, res) => {
 
       sumaMes.push({ 
         'zona': arrZonas[index],
+        'Total Contenedores Mes': zonaArrMes[index].length,
+        'Puntuación Mensual': {
+          'Bueno': (zonaArrMes[index].filter( x => x.estado.includes('Bueno')).length * 5) / zonaArrMes[index].length,
+          'Roto': (zonaArrMes[index].filter( x => x.estado.includes('Roto')).length * 5) / zonaArrMes[index].length,
+          'Sucio': (zonaArrMes[index].filter( x => x.estado.includes('Sucio')).length * 5) / zonaArrMes[index].length,
+          'Fuera de sitio': (zonaArrMes[index].filter( x => x.estado.includes('Fuera de sitio')).length * 5) / zonaArrMes[index].length,
+          'Exceso de carga': (zonaArrMes[index].filter( x => x.estado.includes('Exceso de carga')).length * 5) / zonaArrMes[index].length,
+          'Muy vacío': (zonaArrMes[index].filter( x => x.estado.includes('Muy vacío')).length * 5) / zonaArrMes[index].length,
+          'Otros': (zonaArrMes[index].filter( x => x.estado.includes('Otros')).length * 5) / zonaArrMes[index].length
+        },
+        'Calidad Segregación': (zonaArrMes[index].reduce((prev, current) => prev + current.calificacion, 0) * 5) / (zonaArrMes[index].length * 5),
         'Bueno': zonaArrMes[index].filter( x => x.estado.includes('Bueno')).length,
         'Roto': zonaArrMes[index].filter( x => x.estado.includes('Roto')).length,
         'Sucio': zonaArrMes[index].filter( x => x.estado.includes('Sucio')).length,
@@ -403,6 +415,7 @@ app.get("/problemas-por-zonas", verificaToken , async (req, res) => {
 
       sumaAnio.push({ 
         'zona': arrZonas[index],
+        'Total Contenedores Año': zonaArrAnio[index].length,
         'Bueno': zonaArrAnio[index].filter( x => x.estado.includes('Bueno')).length,
         'Roto': zonaArrAnio[index].filter( x => x.estado.includes('Roto')).length,
         'Sucio': zonaArrAnio[index].filter( x => x.estado.includes('Sucio')).length,
@@ -477,6 +490,17 @@ app.get("/problemas-por-residuos", verificaToken , async (req, res) => {
 
       sumaMes.push({ 
         'Resíduo': arrResiduos[index].nombre,
+        'Total Contenedores Mes': arrMes[index].length,
+        'Puntuación Mensual': {
+          'Bueno': (arrMes[index].filter( x => x.estado.includes('Bueno')).length * 5) / arrMes[index].length,
+          'Roto': (arrMes[index].filter( x => x.estado.includes('Roto')).length * 5) / arrMes[index].length,
+          'Sucio': (arrMes[index].filter( x => x.estado.includes('Sucio')).length * 5) / arrMes[index].length,
+          'Fuera de sitio': (arrMes[index].filter( x => x.estado.includes('Fuera de sitio')).length * 5) / arrMes[index].length,
+          'Exceso de carga': (arrMes[index].filter( x => x.estado.includes('Exceso de carga')).length * 5) / arrMes[index].length,
+          'Muy vacío': (arrMes[index].filter( x => x.estado.includes('Muy vacío')).length * 5) / arrMes[index].length,
+          'Otros': (arrMes[index].filter( x => x.estado.includes('Otros')).length * 5) / arrMes[index].length
+        },
+        'Calidad Segregación': (arrMes[index].reduce((prev, current) => prev + current.calificacion, 0) * 5) / (arrMes[index].length * 5),
         'Bueno': arrMes[index].filter( x => x.estado.includes('Bueno')).length,
         'Roto': arrMes[index].filter( x => x.estado.includes('Roto')).length,
         'Sucio': arrMes[index].filter( x => x.estado.includes('Sucio')).length,
