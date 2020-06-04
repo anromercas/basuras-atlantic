@@ -83,14 +83,21 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
         });
       }
 
+      let _historicoDB = historicoDB;
+
+
       if( residuo === 'Envases Plásticos/Metálicos Contaminados') {
-        historicoDB.forEach( hist => {
-          hist.nombre = 'Envases Plásticos/Metálicos Contaminados';
-        });
+        _historicoDB = historicoDB.map( h => {return {...h, nombre: residuo }})
       }
       
+      res.json({
+        ok: true,
+        historicos: _historicoDB,
+        total: _historicoDB.length
+      });
 
-      Historico.countDocuments(
+
+      /* Historico.countDocuments(
         {
           'nombre': { $regex: residuo },
           'estado': { $regex: estado },
@@ -102,11 +109,11 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
         (err, conteo) => {
           res.json({
             ok: true,
-            historicos: historicoDB,
+            historicos: _historicoDB,
             total: conteo
           });
         }
-      );
+      ); */
     });
 });
 
