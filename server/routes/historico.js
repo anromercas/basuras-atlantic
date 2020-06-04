@@ -87,17 +87,42 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
         });
       }
 
-      let _historicoDB = historicoDB;
+      
+// console.log(historicoDB);
 
-
+      
+      
       if( _residuo !== residuo ) {
-        _historicoDB = historicoDB.map( h => {return {...h, nombre: residuo }})
+
+        console.log(Object.keys(historicoDB[0]._doc));
+        
+        const _historicoDB = historicoDB.map( h => {return {...h._doc, nombre: residuo }})
+        /* let _historicoDB = [];
+        historicoDB.forEach(h => {
+          let newEntry = {};
+          Object.keys(h._doc).forEach(k => {
+            if (k !== 'nombre')
+              newEntry[k] = h[k];
+            else 
+              newEntry[k] = residuo;
+          })
+          _historicoDB.push(newEntry);
+        })
+
+        console.log(_historicoDB);
+*/
+        return res.json({
+          ok: true,
+          historicos: _historicoDB,
+          total: _historicoDB.length
+        });
+ 
       }
       
-      res.json({
+      return res.json({
         ok: true,
-        historicos: _historicoDB,
-        total: _historicoDB.length
+        historicos: historicoDB,
+        total: historicoDB.length
       });
 
 
