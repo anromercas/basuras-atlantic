@@ -492,9 +492,21 @@ app.get("/problemas-por-residuos", verificaToken , async (req, res) => {
     let sumaMes = [];
     let sumaAnio = [];
     arrResiduos.forEach( (residuo, index) => {
+
+
+      let flag = false;
+      if( residuo.nombre === 'Envases Plásticos/Metálicos Contaminados') {
+        flag = true;
+        residuo.nombre = 'Plástico/envases Contaminados';
+      }
+          
       arrSem[index] = semana.filter(h => h.nombre.includes(residuo.nombre));
       arrMes[index] = mes.filter(h => h.nombre.includes(residuo.nombre));
       arrAnio[index] = anio.filter(h => h.nombre.includes(residuo.nombre));
+
+      if( flag ) {
+        residuo.nombre = 'Envases Plásticos/Metálicos Contaminados';
+      }
       sumaSemana.push({ 
         'Resíduo': arrResiduos[index].nombre,
         'Bueno': arrSem[index].filter( x => x.estado.includes('Bueno')).length,

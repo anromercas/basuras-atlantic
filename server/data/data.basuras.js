@@ -61,6 +61,10 @@ const BASURAS = [
     suma: 0
   },
   {
+    nombre: 'Envases Plásticos/Metálicos Contaminadoss',
+    suma: 0
+  },
+  {
     nombre: 'Envases Metálicos',
     suma: 0
   },
