@@ -53,12 +53,16 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
   let fechaDesde = req.query.fechadesde || new Date();
   let fechaHasta = req.query.fechahasta || new Date();
 
-  if( residuo === 'Envases Plásticos/Metálicos Contaminados') {
-    residuo = 'Plástico/envases Contaminados';
+  let _residuo = residuo;
+
+  if( _residuo === 'Envases Plásticos/Metálicos Contaminados') {
+    _residuo = 'Plástico/envases Contaminados';
   }
 
+  console.log(_residuo);
+
   Historico.find({
-    'nombre': { $regex: residuo },
+    'nombre': { $regex: _residuo },
     'estado': { $regex: estado },
     $and: [
       { fecha: { $gte: new Date(fechaDesde) } },
@@ -86,7 +90,7 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
       let _historicoDB = historicoDB;
 
 
-      if( residuo === 'Envases Plásticos/Metálicos Contaminados') {
+      if( _residuo !== residuo ) {
         _historicoDB = historicoDB.map( h => {return {...h, nombre: residuo }})
       }
       
