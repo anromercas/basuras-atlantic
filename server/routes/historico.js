@@ -93,8 +93,6 @@ app.get("/historico-residuo", verificaToken, (req, res) => {
       
       
       if( _residuo !== residuo ) {
-
-        console.log(Object.keys(historicoDB[0]._doc));
         
         const _historicoDB = historicoDB.map( h => {return {...h._doc, nombre: residuo }})
         /* let _historicoDB = [];
