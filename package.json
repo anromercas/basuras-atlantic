@@ -29,6 +29,6 @@
         "secure-random-password": "^0.2.1",
         "shortid": "^2.2.15",
         "speakeasy": "^2.0.0",
-        "underscore": "^1.9.1"
+        "underscore": "^1.12.1"
     }
 }
